@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = $"{@Model.Title}";
+}
+<div class="row d-flex items-center justify-content-center">
+    <div class="col-md-10">
+        <h4 action="capitalize">@Model.Title</h4>
+        <p>@Model.Creator.Name @Model.Creator.Surname | @Model.Category.Name</p>
+        <p class="text-muted">@Model.CreatedAt</p>
+        <hr/>
+        <div class="detail-image-wrapper d-flex items-center justify-content-center">
+            <img src="@Model.Image" class="detail-image" />
+        </div>
+        <div class="mt-4">
+            <p class="detail-content">@Html.Raw(Model.Content)</p>
+        </div>
+    </div>
+</div>
+
+
+

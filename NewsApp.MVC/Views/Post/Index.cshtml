@@ -1,0 +1,39 @@
+﻿﻿
+@{
+    ViewData["Title"] = "Post Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<PostViewModel>
+
+
+<div class="container">
+    <h4>Post Management Portal</h4>
+    <hr />
+    <div class="row px-4">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Owner</th>
+                    <th>Created At</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var post in Model)
+                {
+                    <tr>
+                        <td>@(post.Title.Length > 30 ? post.Title.Substring(0, 30) + "..." : post.Title)</td>
+                        <td>@post.Creator.Name @post.Creator.Surname</td>
+                        <td>@post.CreatedAt</td>
+                        <td>
+                            <a class="btn btn-success">Detail</a>
+                            <a class="btn btn-warning">Update</a>
+                            <a class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

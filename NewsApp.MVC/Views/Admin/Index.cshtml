@@ -1,0 +1,48 @@
+﻿@model List<AppUserViewModel>
+
+<div class="row">
+    <div class="col-md-10 offset-1">
+        <h4>User List</h4>
+        <hr />
+        <div class="row">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name @item.Surname</td>
+                            <td>@item.UserName</td>
+                            <td>@item.Email</td>
+                            <td>
+                                @if (item.IsSubcriber)
+                                {
+                                    <span class="text-success">Onaylandı</span>
+                                }
+                                else
+                                {
+                                    <form method="post" asp-controller="Admin" asp-action="ApproveUsersAccount">
+                                        <input type="hidden" name="userId" value="@item.Id" />
+                                        <button type="submit" class="btn btn-outline-warning">Onayla</button>
+                                    </form>
+                                }
+                            </td>
+                            <td class="d-flex align-items-center justify-content-center gap-1 p-2">
+                                <a class="btn btn-outline-primary">Detay</a>
+                                <a class="btn btn-outline-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

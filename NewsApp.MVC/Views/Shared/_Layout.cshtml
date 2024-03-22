@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DailyNews | @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/NewsApp.MVC.styles.css" asp-append-version="true" />
+
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid items-center justify-content-between">
+                <div class="d-flex justify-content-center">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DailyNews</a>
+                </div>
+                <div class="search-input-wrapper d-flex gap-2 align-items-center">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="search" class="custom-input" placeholder="search..." autocomplete="off"/>
+                </div>
+                <div>
+                    <partial name="navbarUserLoginSection"/>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="container"><!--Mid Container Starts Here-->
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div><!--Mid Container Ends Here-->
+
+    <footer class="border-top text-muted">
+        <div class="container mt-4">
+            <div class="row mt-4 border-bottom">
+                <div class="col-md-3">
+                    <h6>Contact</h6>
+                    <hr />
+                    <ul class="footer-lists">
+                        <li><i class="fa-solid fa-at"></i> dailynewsglobal@mail.com</li>
+                        <li><i class="fa-solid fa-at"></i> dailynewsglobal.contact@mail.com</li>
+                        <li><i class="fa-solid fa-phone"></i> +90 555 444 33 22</li>
+                        <li><i class="fa-solid fa-phone"></i> +90 555 333 22 11</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>About Us</h6>
+                    <hr/>
+                    <ul class="footer-lists">
+                        <li><i class="fa-solid fa-globe"></i> www.dailynewsglobal.com</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Support</h6>
+                    <hr/>
+                    <ul class="footer-lists">
+                        <li>Click <a href=""><span>here</span></a> to get contact with support department.</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Socials</h6>
+                    <hr/>
+                    <ul class="footer-lists">
+                        <li><i class="fa-brands fa-linkedin"></i> Linkedin</li>
+                        <li><i class="fa-brands fa-youtube"></i> Youtube</li>
+                        <li><i class="fa-brands fa-square-x-twitter"></i> X</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row text-center mt-4">
+                <h6>&copy; 2024 - DailyNews | This website built for Software Development Lecture of Namık Kemal University.</h6>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/c9fdab916c.js" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

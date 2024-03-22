@@ -1,0 +1,99 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+a{
+    text-decoration:none;
+    color:black;
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+/*Navbars Here*/
+
+
+.section-navitems-wrapper{
+    witdh:100%;
+}
+.section-navitems-wrapper li{
+    list-style:none;
+}
+
+.section-navitems-wrapper .nav-item a{
+    color:black;
+}
+
+#user-navbar-dropdown-wrapper{
+    position: relative;
+}
+
+#user-navbar-dropdown{
+    position:absolute;
+    left:-78px;
+    top:40px;
+}
+
+.form-label{
+    min-width:90px;
+    font-weight:700;
+    height:100%;
+    margin-top:10px;
+    padding:5px;
+}
+
+.custom-input{
+    outline:none;
+    padding:5px;
+    border:none;
+    width:100%;
+}
+
+.search-input-wrapper{
+    border: 1px solid gray;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-left:15px;
+}
+
+/*DetailPage Here*/
+.detail-image{
+    max-width:960px;
+}
+
+.detail-content{
+   text-align:justify;
+}
+
+
+/*Footer Here*/
+.footer-lists{
+    list-style:none;
+}
+

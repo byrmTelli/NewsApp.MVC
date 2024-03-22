@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "UserEdit";
+}
+
+@section Scripts
+{
+
+    @await Html.PartialAsync("_ValidationScriptsPartial");
+
+}
+
+@model AppUserViewModel
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h4>User Update</h4>
+        <hr />
+        <div class="alert alert-danger" asp-validation-summary=ModelOnly role="alert">
+        </div>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+        <form asp-controller="Admin" asp-action="UpdateUser" method="post" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <label asp-for="Email" class="col-md-4 col-form-label"></label>
+                <div class="col-md-8">
+                    <p>@Model.Email</p>
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="Phone" class="col-md-4 col-form-label"></label>
+                <div class="col-md-8">
+                    <input class="form-control" asp-for="Phone" autocomplete="off" value="@Model.Phone">
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="BirthDate" class="col-md-4 col-form-label"></label>
+                <div class="col-md-8">
+                    <input class="form-control" asp-for="BirthDate" autocomplete="off" value="@Model.BirthDate">
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="Image" class="col-md-4 col-form-label"></label>
+                <div class="col-md-8">
+                    <input class="form-control" type="file" asp-for="Image" autocomplete="off" value="@Model.Image">
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="Name" class="col-md-4 col-form-label"></label>
+                <div class="col-md-8">
+                    <input class="form-control" asp-for="Name" autocomplete="off" value="@Model.Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="Surname" class="col-md-4 col-form-label"></label>
+                <div class="col-md-8">
+                    <input class="form-control" asp-for="Surname" autocomplete="off" value="@Model.Surname">
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="HomeLand" class="col-md-4 col-form-label"></label>
+                <div class="col-md-8">
+                    <input class="form-control" asp-for="HomeLand" autocomplete="off" value="@Model.HomeLand">
+                    <span asp-validation-for="HomeLand" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="submit" class="btn btn-outline-dark">Update</button>
+            </div>
+        </form>
+    </div>
+</div>

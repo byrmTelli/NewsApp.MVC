@@ -1,0 +1,47 @@
+﻿﻿
+@{
+    ViewData["Title"] = "SignIn";
+}
+@section Scripts
+{
+
+    @await Html.PartialAsync("_ValidationScriptsPartial");
+
+}
+
+@model AppUserLoginRequestModel
+
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <h4 class="text-center">Login</h4>
+        <hr />
+        <div class="alert alert-danger" asp-validation-summary=ModelOnly role="alert">
+        </div>
+        <form asp-controller="Home" asp-action="SignIn" asp-route-returnurl="@Context.Request.Query["returnURL"]" method="post">
+            <div class="mb-3">
+                <div class="d-flex align-items-center gap-1 search-input-wrapper">
+                    <label asp-for="Email" class="form-label mt-1"></label>
+                    <input class="custom-input" asp-for="Email" autocomplete="off">
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex align-items-center gap-1 search-input-wrapper">
+                    <label asp-for="Password" class="form-label mt-1"></label>
+                    <input type="password" class="custom-input" asp-for="Password" autocomplete="off">
+                    <span class="text-danger" asp-validation-for="Password"></span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-center">
+                <a asp-controller="Home" asp-action="ForgetPassword" class="btn btn-link">Şifremi Unuttum</a>
+            </div>
+            <div class="d-flex justify-content-between form-check">
+                <div class="">
+                    <label class="form-check-label" asp-for="RememberMe" for="RememberMe">Remember</label>
+                    <input type="checkbox" class="form-check-input" asp-for="RememberMe">
+                </div>
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

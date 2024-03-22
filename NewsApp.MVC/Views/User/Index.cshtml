@@ -1,0 +1,50 @@
+﻿﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@model AppUserViewModel
+
+
+
+<div class="text-center">
+    <h4>Kullanıcı Bilgileri</h4>
+    <hr/>
+</div>
+
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <user-picture-thumbnail picture-url="" class="rounded" style="width:300px"></user-picture-thumbnail>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form asp-controller="User" asp-action="UpdateUser" method="post">
+            <div class="d-flex align-items-center gap-2">
+                <label asp-for="UserName" class="form-label">Username: </label>
+                <input asp-for="UserName" autocomplete="off" class="outline-none border-0 custom-input" />
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label asp-for="Name" class="form-label">Name: </label>
+                <input asp-for="Name" autocomplete="off" class="outline-none border-0 custom-input" />
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label asp-for="Surname" class="form-label">Surname: </label>
+                <input asp-for="Surname" autocomplete="off" class="outline-none border-0 custom-input" />
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label asp-for="Email" class="form-label">Email: </label>
+                <input asp-for="Email" autocomplete="off" class="outline-none border-0 custom-input" />
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label asp-for="HomeLand" class="form-label">HomeLand: </label>
+                <input asp-for="HomeLand" autocomplete="off" class="outline-none border-0 custom-input" />
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label asp-for="Phone" class="form-label">Phone: </label>
+                <input asp-for="Phone" autocomplete="off" class="outline-none border-0 custom-input" />
+            </div>
+        </form>
+    </div>
+</div>

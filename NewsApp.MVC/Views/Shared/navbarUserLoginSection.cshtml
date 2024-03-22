@@ -1,0 +1,34 @@
+﻿﻿@using System.Security.Claims
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    <ul class="navbar-nav me-2">
+        <li class="nav-item dropdown" id="user-navbar-dropdown-wrapper">
+            <a class="nav-link dropdown-toggle text-capitalize" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @User.Identity.Name
+            </a>
+            <ul class="dropdown-menu" id="user-navbar-dropdown" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Profile</a></li>
+                <li><a class="dropdown-item" asp-controller="User" asp-action="PasswordChange">Şifre Değiştir</a></li>
+                <li><a class="dropdown-item" asp-controller="Post" asp-action="Create">New Post</a></li>
+                <li><a class="dropdown-item" asp-controller="User" asp-action="UpdateUser">Kullanıcı Güncelle</a></li>
+                <li><a class="dropdown-item" asp-controller="Role" asp-action="AssignRoleToUser">Manage Roles</a></li>
+                <li><a class="dropdown-item" asp-controller="Member" asp-action="Claims">User Claims</a></li>
+                @{
+                    if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                    {
+                        <li><a class="dropdown-item"  asp-controller="Admin" asp-action="Index">Admin</a></li>
+                        <li><a class="dropdown-item"  asp-controller="Admin" asp-action="AssignCategoryToUser">Add Department Leader</a></li>
+                    }
+                }
+                <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut" asp-route-returnurl="/Home/Index">Çıkış</a></li>
+            </ul>
+        </li>
+    </ul>
+}
+else
+{
+    <a class="btn btn-outline-dark" asp-area="" asp-controller="Home" asp-action="SignUp">Sign Up</a>
+    <a class="btn btn-outline-dark mx-1" asp-area="" asp-controller="Home" asp-action="SignIn">Sign In</a>
+}

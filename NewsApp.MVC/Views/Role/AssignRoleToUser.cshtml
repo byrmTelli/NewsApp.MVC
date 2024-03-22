@@ -1,0 +1,53 @@
+﻿@model List<AppUserViewModel>
+<div class="row">
+    <div class="col-md-10 offset-1">
+        <h4>User List</h4>
+        <hr />
+        <div class="row">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th>Add Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name @item.Surname</td>
+                            <td>@item.Email</td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    @foreach (var role in item.Roles)
+                                    {
+                                        <span>@role</span>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1 p-2">
+                                    <select class="form-select p-1" id="roleSelect" aria-label="Select Role">
+                                        <option selected disabled>Select Role</option>
+                                        @foreach (var role in ViewBag.AllRoles)
+                                        {
+                                            if (!item.Roles.Contains(role.RoleName))
+                                            {
+                                                <option value="@role.Id">@role.RoleName</option>
+                                            }
+                                        }
+                                    </select>
+                                    <a class="btn btn-outline-primary">+</a>
+                                </div>
+                               
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
