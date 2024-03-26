@@ -38,10 +38,12 @@ namespace NewsApp.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            
             var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name!);
-            ViewBag.Categories = await _categoryService.GetUsersCategory(currentUser.Id); // Kategorileri view'e aktar
-
-            ViewBag.CurrentUserId = currentUser?.Id; // Oturumu açmış kullanıcının ID'sini view'e aktar
+            var usersCategory = await _categoryService.GetUsersCategory(currentUser!.Id);
+            var categories = await _categoryService.GetAllCategories();
+            ViewBag.Categories = categories;
+            ViewBag.CurrentUserId = currentUser?.Id;
 
             return View();
         }
@@ -54,9 +56,24 @@ namespace NewsApp.MVC.Controllers
                 return View();
             }
 
+            var user = await _userManager.FindByNameAsync(User.Identity!.Name!);
+            var usersCategories = await _categoryService.GetUsersCategory(user!.Id);
+            var categories = await _categoryService.GetAllCategories();
+            ViewBag.Categories = categories;
 
-            var result = await _postService.Create(model);
-            return RedirectToAction("Index", "Home");
+            if (usersCategories.Any(category => category.Id == model.CategoryId))
+            {
+                var result = await _postService.Create(model);
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError("CategoryId", "You are not authorized to create posts in this category.");
+
+                return View();
+            }
+
         }
+
     }
 }

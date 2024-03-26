@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DailyNews | @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/NewsApp.MVC.styles.css" asp-append-version="true" />
+
+
+</head>
+<body>
+    <div class="site-wrapper">
+        <div class="admin-sidebar">
+            <div class="sidebar-content-wrapper">
+                <div class="sidebar-brand-wrapper">
+                    <h2 class="p-4">DailyNews</h2>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-item-wrapper">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <a class="nav-section-item text-black" href="">Dashboard</a>
+                    </div>
+                    <div class="nav-section-item-wrapper">
+                        <i class="fa-solid fa-people-arrows"></i>
+                        <a class="nav-section-item text-black" href="">Manage Users</a>
+                    </div>
+                    <div class="nav-section-item-wrapper">
+                        <i class="fa-solid fa-newspaper"></i>
+                        <a class="nav-section-item text-black" href="">Manage Posts</a>
+                    </div>
+                    <div class="nav-section-item-wrapper">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <a class="nav-section-item text-black" href="">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-navbar bg-dark text-white">
+                <i class="fa-solid fa-bars navbar-toggle-icon"></i>
+                <div class="navbar-user-info d-flex gap-2 align-items-center justify-content-center">
+                    <span class="p-2">Bayram Telli</span>
+                    <img class="navbar-user-image" src="https://s3-us-east-2.amazonaws.com/maryville/wp-content/uploads/2021/12/07093036/businessman-conference-room.jpg" alt="">
+                </div>
+            </div><!--here content-navbar-ends-->
+            <div class="content-data">
+                <h1>Dashboard</h1>
+                <hr>
+                <div>
+                    @RenderBody()
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <script src="https://kit.fontawesome.com/c9fdab916c.js" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/c9fdab916c.js" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
