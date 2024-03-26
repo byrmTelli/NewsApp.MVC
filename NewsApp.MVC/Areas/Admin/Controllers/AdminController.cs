@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using NewsApp.CORE.DBModels;
 using NewsApp.SERVICE.Services.Abstract;
 
-namespace NewsApp.MVC.Controllers
+namespace NewsApp.MVC.Areas.Admin.Controllers
 {
-    [Authorize(Roles ="admin")]
+    [Authorize(Roles = "admin")]
+    [Area("Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -27,7 +28,7 @@ namespace NewsApp.MVC.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var allUsers =await _appUserService.GetAllUsers();
+            var allUsers = await _appUserService.GetAllUsers();
             return View(allUsers.Data);
         }
         [HttpGet]
@@ -46,18 +47,18 @@ namespace NewsApp.MVC.Controllers
         public async Task<IActionResult> AssignCategoryToUser()
         {
             var user = await _userManager.FindByNameAsync(User.Identity!.Name!);
-            ViewBag.Categories =await _categoryService.GetUsersCategory(user.Id);
+            ViewBag.Categories = await _categoryService.GetUsersCategory(user.Id);
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssignCategoryToUser(string userId,string categoryId)
+        public async Task<IActionResult> AssignCategoryToUser(string userId, string categoryId)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
-            await _appUserService.AssignCategoryToUser(userId,categoryId);
+            await _appUserService.AssignCategoryToUser(userId, categoryId);
             return View();
         }
         [HttpPost]
@@ -67,9 +68,9 @@ namespace NewsApp.MVC.Controllers
             {
                 return View();
             }
-            
+
             await _appUserService.ApproveUsersAccount(userId);
-            return RedirectToAction("Index","Admin");
+            return RedirectToAction("Index", "Admin");
         }
     }
 }

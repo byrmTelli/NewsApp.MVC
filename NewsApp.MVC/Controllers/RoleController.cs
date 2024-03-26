@@ -66,29 +66,33 @@ namespace NewsApp.MVC.Controllers
             return View(allUsers.Data);
         }
         [HttpPost]
-        public async Task<IActionResult> AssignRoleToUser(string userId)
+        public async Task<IActionResult> AssignRoleToUser(string userId, string roleId)
         {
             var currentUser = await _userManager.FindByIdAsync(userId);
 
-
-            var roles = await _roleManager.Roles.ToListAsync();
-
-            var userRoles = await _userManager.GetRolesAsync(currentUser!);
-
-
-            var roleViewModelList = new List<AssignRoleToUserViewModel>();
-
-            foreach (var role in roles)
+            if (currentUser == null)
             {
-                var assignRoleToUserViewmodel = new AssignRoleToUserViewModel() { Id = role.Id, Name = role.Name };
-
-                if (userRoles.Contains(role.Name!))
-                {
-                    assignRoleToUserViewmodel.isRoleExist = true;
-                }
-                roleViewModelList.Add(assignRoleToUserViewmodel);
+                return NotFound();
             }
-            return View(roleViewModelList);
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(currentUser);
+
+            if (userRoles.Contains(role.Name))
+            {
+                ModelState.AddModelError(string.Empty, "User already has this role.");
+                return View();
+            }
+            await _userManager.AddToRoleAsync(currentUser, role.Name);
+
+            return RedirectToAction(nameof(AssignRoleToUser));
         }
+
     }
 }
