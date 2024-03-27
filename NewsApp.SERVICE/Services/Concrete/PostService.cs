@@ -41,7 +41,7 @@ namespace NewsApp.SERVICE.Services.Concrete
 
         }
 
-        public async Task<Response<List<PostViewModel>>> GettAllNews()
+        public async Task<Response<List<PostViewModel>>> GettAllPosts()
         {
             var allNews = await _context.Posts.Select(x => new PostViewModel()
             {
@@ -130,5 +130,11 @@ namespace NewsApp.SERVICE.Services.Concrete
 
             return Response<List<PostViewModel>>.Success(userPosts, 200);
         }
+
+        public async Task<Response<List<PostViewModel>>> FilterPost(Func<PostViewModel, bool> exp)
+        {
+            throw new ArgumentException();
+        }
+
     }
 }

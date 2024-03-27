@@ -14,17 +14,20 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IAppUserService _appUserService;
         private readonly ICategoryService _categoryService;
+        private readonly IPostService _postService;
         public AdminController(
             UserManager<AppUser> userManager,
             RoleManager<AppRole> roleManager,
             IAppUserService userService,
-            ICategoryService categorySerivce
+            ICategoryService categorySerivce,
+            IPostService postService
             )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _appUserService = userService;
             _categoryService = categorySerivce;
+            _postService = postService;
         }
         public async Task<IActionResult> Index()
         {
@@ -71,6 +74,13 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
 
             await _appUserService.ApproveUsersAccount(userId);
             return RedirectToAction("Index", "Admin");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManagePosts()
+        {
+            var allPosts =await _postService.GettAllPosts();
+            return View(allPosts.Data);
         }
     }
 }
