@@ -13,8 +13,9 @@ namespace NewsApp.SERVICE.Services.Abstract
     public interface IPostService
     {
         Task<Response<NoDataViewModel>> Delete(string id);
-        Task<Response<List<PostViewModel>>> GettAllNews();
+        Task<Response<List<PostViewModel>>> GettAllPosts();
         Task<PostViewModel> GetSingleNewsById(string id);
+        Task<Response<List<PostViewModel>>> FilterPost(Func<PostViewModel,bool> exp);
         Task<Response<NoDataViewModel>> Create(PostRequestModel model);
         Task<Response<List<PostViewModel>>> GetAllPostsOfUser(string userId);
     }

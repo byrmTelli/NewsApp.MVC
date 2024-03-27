@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Manage Posts";
+}
+@model List<PostViewModel>
+<div class="row">
+    <h2>Manage Posts</h2>
+    <hr/>
+    @foreach (var post in Model)
+    {
+        <a>@post.Title</a>
+    }
+</div>

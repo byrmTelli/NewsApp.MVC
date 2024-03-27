@@ -34,7 +34,7 @@ namespace NewsApp.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var allNews = await _postService.GettAllNews();
+            var allNews = await _postService.GettAllPosts();
             if (User.Identity.IsAuthenticated)
             {
                 var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);

@@ -19,20 +19,20 @@
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <a class="nav-section-item text-black" href="">Dashboard</a>
-                    </div>
-                    <div class="nav-section-item-wrapper">
                         <i class="fa-solid fa-people-arrows"></i>
-                        <a class="nav-section-item text-black" href="">Manage Users</a>
+                        <a asp-controller="Admin" asp-action="Index" class="nav-section-item text-black">Manage Users</a>
                     </div>
                     <div class="nav-section-item-wrapper">
                         <i class="fa-solid fa-newspaper"></i>
-                        <a class="nav-section-item text-black" href="">Manage Posts</a>
+                        <a asp-controller="Admin" asp-action="ManagePosts" class="nav-section-item text-black" >Manage Posts</a>
+                    </div>
+                    <div class="nav-section-item-wrapper">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <a class="nav-section-item text-black" >Dashboard</a>
                     </div>
                     <div class="nav-section-item-wrapper">
                         <i class="fa-solid fa-right-from-bracket"></i>
-                        <a class="nav-section-item text-black" href="">Logout</a>
+                        <a asp-area="" asp-controller="User" asp-action="SignOut" class="nav-section-item text-black">Logout</a>
                     </div>
                 </div>
             </div>
@@ -46,8 +46,6 @@
                 </div>
             </div><!--here content-navbar-ends-->
             <div class="content-data">
-                <h1>Dashboard</h1>
-                <hr>
                 <div>
                     @RenderBody()
                 </div>
