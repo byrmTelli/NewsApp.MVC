@@ -118,3 +118,14 @@ body {
 }
 
 
+/*Manage Users*/
+
+/*Global components*/
+.custom-admin-card{
+    display:flex;
+    flex-direction:column;
+    min-height:150px;
+    align-items:center;
+    justify-content:center;
+    border-radius:15px;
+}

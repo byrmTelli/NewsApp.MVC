@@ -1,7 +1,7 @@
 ﻿using NewsApp.CORE.ViewModels.PostViewModels;
 using NewsApp.CORE.ViewModels.UserViewModels;
 
-namespace NewsApp.MVC.Areas.Admin.Models.ViewModels
+namespace NewsApp.CORE.ViewModels.AdminPageViewModels
 {
     public class AdminPanelDashboardViewModel
     {

@@ -117,7 +117,6 @@ namespace NewsApp.MVC.Controllers
 
             return RedirectToAction(nameof(UserController.UpdateUser));
         }
-
         public IActionResult AccessDenied(string returnUrl)
         {
             string message = string.Empty;

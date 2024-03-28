@@ -15,12 +15,14 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
         private readonly IAppUserService _appUserService;
         private readonly ICategoryService _categoryService;
         private readonly IPostService _postService;
+        private readonly IAdminService _adminService;
         public AdminController(
             UserManager<AppUser> userManager,
             RoleManager<AppRole> roleManager,
             IAppUserService userService,
             ICategoryService categorySerivce,
-            IPostService postService
+            IPostService postService,
+            IAdminService adminService
             )
         {
             _userManager = userManager;
@@ -28,11 +30,12 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
             _appUserService = userService;
             _categoryService = categorySerivce;
             _postService = postService;
+            _adminService = adminService;
         }
         public async Task<IActionResult> Index()
         {
-            var allUsers = await _appUserService.GetAllUsers();
-            return View(allUsers.Data);
+            var managEUsers = await _adminService.ManageUsers();
+            return View(managEUsers.Data);
         }
         [HttpGet]
         public async Task<IActionResult> UpdateUser(string userId)

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DailyNews | @ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NewsApp.MVC.styles.css" asp-append-version="true" />
 
@@ -78,6 +79,7 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/c9fdab916c.js" crossorigin="anonymous"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -88,6 +90,14 @@
             .catch(error => {
                 console.error(error);
             });
+
+
+        var js = jQuery.noConflict(true);
+        js(document).ready(function () {
+            js('#datatable').DataTable({
+
+            });
+        });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
