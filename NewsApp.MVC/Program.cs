@@ -53,6 +53,7 @@ builder.Services.AddScoped<IPostService,PostService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IAppRoleService, AppRoleService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IEmailService,EmailService>();
 //builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 #endregion

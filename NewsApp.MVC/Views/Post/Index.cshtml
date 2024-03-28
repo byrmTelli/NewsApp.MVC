@@ -7,10 +7,13 @@
 
 
 <div class="container">
-    <h4>Post Management Portal</h4>
+    <div class="d-flex align-items-center justify-content-between">
+        <h4>Post Management Portal</h4>
+        <a asp-controller="Post" asp-action="Create" class="btn btn-primary">New Post</a>
+    </div>
     <hr />
     <div class="row px-4">
-        <table>
+        <table class="text-center" id="datatable">
             <thead>
                 <tr>
                     <th>Title</th>

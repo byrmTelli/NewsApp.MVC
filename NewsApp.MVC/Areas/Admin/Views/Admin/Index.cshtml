@@ -1,11 +1,39 @@
-﻿@model List<AppUserViewModel>
+﻿@model ManageUserViewModel
 
-<div class="row">
+<div class="row d-flex">
+    <div class="col">
+        <div class="custom-admin-card text-center bg-danger text-white">
+            <h4>Writer</h4>
+            <h2>@Model.WriterCount</h2>
+        </div>
+    </div>
+    <div class="col">
+        <div class="custom-admin-card text-center bg-success text-white">
+            <h4>Manager</h4>
+            <h1>@Model.ManagerCount</h1>
+        </div>
+    </div>
+    <div class="col">
+        <div class="custom-admin-card text-center bg-warning text-white">
+            <h4>Users</h4>
+            <h5>(Approved)</h5>
+            <h2>10</h2>
+        </div>
+    </div>
+    <div class="col offset">
+        <div class="custom-admin-card text-center bg-primary text-white">
+            <h4>Users</h4>
+            <h2>@Model.TotalUser</h2>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
     <div class="col-md-10 offset-1">
         <h4>User List</h4>
         <hr />
         <div class="row">
-            <table>
+            <table id="datatable" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>User</th>
@@ -16,7 +44,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.UserList)
                     {
                         <tr>
                             <td>@item.Name @item.Surname</td>
