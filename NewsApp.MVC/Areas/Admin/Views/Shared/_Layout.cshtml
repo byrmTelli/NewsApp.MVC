@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,15 +23,33 @@
                 <div class="nav-section">
                     <div class="nav-section-item-wrapper">
                         <i class="fa-solid fa-people-arrows"></i>
-                        <a asp-controller="Admin" asp-action="Index" class="nav-section-item text-black">Manage Users</a>
+                        <a asp-controller="Admin" asp-action="Dashboard" class="nav-section-item text-black">Dashboard</a>
+                    </div>
+                    <div class="nav-section-item-wrapper">
+                        <i class="fa-solid fa-people-arrows"></i>
+                        <a asp-controller="Admin" asp-action="Index" class="nav-section-item text-black">Users</a>
+                    </div>
+                    <div class="nav-section-item-wrapper">
+                        <i class="fa-solid fa-people-arrows"></i>
+                        <a asp-controller="Admin" asp-action="ManageDepartments" class="nav-section-item text-black">Departments</a>
+                    </div>
+                    @{
+                        if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                        {
+                            <div class="nav-section-item-wrapper">
+                                <i class="fa-solid fa-people-arrows"></i>
+                                <a asp-controller="Admin" asp-action="AssignCategoryToUser" class="nav-section-item text-black">Roles & Authozirations</a>
+                            </div>
+                        }
+                    }
+
+                    <div class="nav-section-item-wrapper">
+                        <i class="fa-solid fa-newspaper"></i>
+                        <a asp-controller="Admin" asp-action="ManagePosts" class="nav-section-item text-black" >Posts</a>
                     </div>
                     <div class="nav-section-item-wrapper">
                         <i class="fa-solid fa-newspaper"></i>
-                        <a asp-controller="Admin" asp-action="ManagePosts" class="nav-section-item text-black" >Manage Posts</a>
-                    </div>
-                    <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <a class="nav-section-item text-black" >Dashboard</a>
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-section-item text-black">Homepage</a>
                     </div>
                     <div class="nav-section-item-wrapper">
                         <i class="fa-solid fa-right-from-bracket"></i>
@@ -43,8 +62,8 @@
             <div class="content-navbar bg-dark text-white">
                 <i class="fa-solid fa-bars navbar-toggle-icon"></i>
                 <div class="navbar-user-info d-flex gap-2 align-items-center justify-content-center">
-                    <span class="p-2">Bayram Telli</span>
-                    <img class="navbar-user-image" src="https://s3-us-east-2.amazonaws.com/maryville/wp-content/uploads/2021/12/07093036/businessman-conference-room.jpg" alt="">
+                    <span class="p-2 text-capitalize">@ViewData["CurrentUser"]</span>
+                    <img class="navbar-user-image" src="@ViewData["ProfileImage"]" alt="">
                 </div>
             </div><!--here content-navbar-ends-->
             <div class="content-data">

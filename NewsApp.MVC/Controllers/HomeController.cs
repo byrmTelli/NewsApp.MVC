@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Experimental.ProjectCache;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.RequestModels.UserRequestModels;
 using NewsApp.MVC.Extensions;
@@ -17,12 +18,14 @@ namespace NewsApp.MVC.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailService _emailService;
+        private readonly ICategoryService _categoryService;
         public HomeController(
             ILogger<HomeController> logger,
             IPostService postService,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            IEmailService emailService
+            IEmailService emailService,
+            ICategoryService categoryService
             )
         {
             _logger = logger;
@@ -30,10 +33,12 @@ namespace NewsApp.MVC.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
+            _categoryService = categoryService;
         }
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Categories = await _categoryService.GetAllCategories();
             var allNews = await _postService.GettAllPosts();
             if (User.Identity.IsAuthenticated)
             {
@@ -54,6 +59,7 @@ namespace NewsApp.MVC.Controllers
         [HttpGet("news/detail/{id}")]
         public async Task<IActionResult> Detail(string id)
         {
+            ViewBag.Categories = await _categoryService.GetAllCategories();
             var news = await _postService.GetSingleNewsById(id);
             return View(news);
         }
@@ -170,7 +176,19 @@ namespace NewsApp.MVC.Controllers
             return RedirectToAction(nameof(ForgetPassword));
         }
 
+        [HttpGet("posts/{categoryName}")]
+        public async Task<IActionResult> CategoryPage(string categoryName)
+        {
+            ViewBag.Categories = await _categoryService.GetAllCategories();
 
+            var result = await _postService.GetPostsByCategory(categoryName);
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(result.Data);
+            }
+            result.Data = result.Data.Where(x => x.IsSubscriberOnly == false).ToList();
+            return View(result.Data);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

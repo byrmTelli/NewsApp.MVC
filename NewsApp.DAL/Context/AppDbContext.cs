@@ -32,19 +32,15 @@ namespace NewsApp.DAL.Context
                 .HasForeignKey(news => news.CategoryId);
             #endregion
 
-            #region category&user N-N
+            #region category&user 1-N
             modelBuilder.Entity<AppUserCategory>()
            .HasKey(uc => new { uc.UserId, uc.CategoryId });
 
-            modelBuilder.Entity<AppUserCategory>()
-                .HasOne(uc => uc.User)
-                .WithMany(u => u.UserCategories)
-                .HasForeignKey(uc => uc.UserId);
 
-            modelBuilder.Entity<AppUserCategory>()
-                .HasOne(uc => uc.Category)
-                .WithMany(c => c.UserCategories)
-                .HasForeignKey(uc => uc.CategoryId);
+            modelBuilder.Entity<AppUser>()
+                .HasOne<Category>(uc => uc.UserCategory)
+                .WithMany(c => c.Users)
+                .HasForeignKey(uc => uc.UserCategoryId);
             #endregion
 
             #region Role%Permission Relations N-N

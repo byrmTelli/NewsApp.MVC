@@ -8,7 +8,7 @@
                 <thead>
                     <tr>
                         <th>User</th>
-                        <th>Email</th>
+                        <th>Department</th>
                         <th>Roles</th>
                         <th>Add Role</th>
                     </tr>
@@ -17,8 +17,26 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Name @item.Surname</td>
-                            <td>@item.Email</td>
+                            <td>@item.Name @item.Surname | (@item.Email)</td>
+                            <td>
+                                <form asp-area="Admin" asp-controller="Admin" asp-action="AssignCategoryToUser" method="post">
+                                    <input type="hidden" name="userId" value="@item.Id" />
+                                    <div class="d-flex gap-2">
+                                        <select class="form-select p-1" name="roleId" aria-label="Select Role">
+                                            <option selected disabled>Select Role</option>
+                                            @foreach (var category in ViewBag.AllCategories)
+                                            {
+                                                if (!item.Roles.Contains(category.Name))
+                                                {
+                                                    <option value="@category.Id">@category.RoleName</option>
+                                                }
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn btn-outline-primary">+</button>
+                                    </div>
+                                </form>
+
+                            </td>
                             <td>
                                 <div class="d-flex gap-1">
                                     @foreach (var role in item.Roles)
@@ -30,17 +48,19 @@
                             <td>
                                 <form asp-controller="Role" asp-action="AssignRoleToUser" method="post">
                                     <input type="hidden" name="userId" value="@item.Id" />
-                                    <select class="form-select p-1" name="roleId" aria-label="Select Role">
-                                        <option selected disabled>Select Role</option>
-                                        @foreach (var role in ViewBag.AllRoles)
-                                        {
-                                            if (!item.Roles.Contains(role.RoleName))
+                                    <div class="d-flex gap-2">
+                                        <select class="form-select p-1" name="roleId" aria-label="Select Role">
+                                            <option selected disabled>Select Role</option>
+                                            @foreach (var role in ViewBag.AllRoles)
                                             {
-                                                <option value="@role.Id">@role.RoleName</option>
+                                                if (!item.Roles.Contains(role.RoleName))
+                                                {
+                                                    <option value="@role.Id">@role.RoleName</option>
+                                                }
                                             }
-                                        }
-                                    </select>
-                                    <button type="submit" class="btn btn-outline-primary">+</button>
+                                        </select>
+                                        <button type="submit" class="btn btn-outline-primary">+</button>
+                                    </div>
                                 </form>
                                
                             </td>

@@ -3,13 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.Generics;
 using NewsApp.CORE.RequestModels.UserRequestModels;
+using NewsApp.CORE.ViewModels.AdminPageViewModels.AssignCategoryRoleViewModels;
+using NewsApp.CORE.ViewModels.CategoryViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
 using NewsApp.CORE.ViewModels.RoleViewModels;
 using NewsApp.CORE.ViewModels.UserViewModels;
 using NewsApp.DAL.Context;
 using NewsApp.SERVICE.Services.Abstract;
+using SQLitePCL;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,59 +32,74 @@ namespace NewsApp.SERVICE.Services.Concrete
             _context = context;
             _roleManager = roleManager;
         }
-        public async Task<Response<AppUserViewModel>> AssignCategoryToUser(string userId, string categoryId)
+        public async Task<Response<AppUserViewModel>> AssignCategoryToUser(AssingCategoryOrRoleToUserViewModel request)
         {
-            var isUserExist = await _userManager.FindByIdAsync(userId);
-            if (isUserExist == null)
+           var isUserExist = await _userManager.FindByIdAsync(request.UserId);
+            if(isUserExist != null)
             {
-                throw new ArgumentNullException(nameof(isUserExist));
+                var category = _context.Categories.Where(_ => _.Id.ToString() == request.CategoryId).FirstOrDefault();
+                if(category != null)
+                {
+                    var oldRecord = await _context.UserCategories.Where(x => x.UserId == isUserExist.Id).FirstOrDefaultAsync();
+                    if(oldRecord != null)
+                    {
+                        _context.Remove(oldRecord);
+                    }
+                    _context.UserCategories.Add(new AppUserCategory()
+                    {
+                        UserId = request.UserId,
+                        CategoryId = Guid.Parse(request.CategoryId)
+                    });
+                }
+
+                var role = await _roleManager.FindByIdAsync(request.RoleId);
+                if (role != null)
+                {
+                    var userRoles = await _userManager.GetRolesAsync(isUserExist);
+                    if(userRoles.Count == 0)
+                    {
+                        await _userManager.AddToRoleAsync(isUserExist, role.Name);
+                    }
+                    else
+                    {
+                        await _userManager.RemoveFromRolesAsync(isUserExist, userRoles);
+                        await _userManager.AddToRoleAsync(isUserExist, role.Name);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return Response<AppUserViewModel>.Success(200);
             }
 
-            var isCategoryExist = await _context.Categories.Where(_ => _.Id.ToString() == categoryId).FirstOrDefaultAsync();
-
-            if (isCategoryExist == null)
-            {
-                throw new ArgumentNullException(nameof(isCategoryExist));
-            }
-
-
-            isUserExist.UserCategories.Add(new AppUserCategory() { CategoryId = Guid.Parse(categoryId) });
-            await _context.SaveChangesAsync();
-
-            var result = new AppUserViewModel()
-            {
-                Id = userId,
-                Name = isUserExist.Name,
-                Surname = isUserExist.Surname,
-                UserName = isUserExist.UserName,
-                BirthDate = isUserExist.BirthDate
-            };
-
-            return Response<AppUserViewModel>.Success(result, 200);
+            return Response<AppUserViewModel>.Fail("There is no user mathed given id",200,true);
         }
         public async Task<Response<List<AppUserViewModel>>> GetAllUsers()
         {
-            var usersWithRoles = await _context.Users
-                .Select(user => new
+           //databasede userCategory üzerinde herhangi bir kayıt yok. Tüm Kullanıcıları kategorileriyle birlikte al.
+           var users = await _context.Users.Select(_ => new AppUserViewModel()
+           {
+                Id = _.Id,
+                Name = _.Name,
+                Surname = _.Surname,
+                Phone = _.Phone,
+                Image = _.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(_.Image),
+                HomeLand = _.HomeLand,
+                Email = _.Email,
+                BirthDate = _.BirthDate,
+                IsSubcriber = _.IsSubscriber,
+                UserName = _.UserName,
+                UserCategory = _context.UserCategories.Where(x => x.UserId == _.Id).Select(x => new CategoryViewModel()
                 {
-                    User = user,
-                    Roles = _userManager.GetRolesAsync(user).Result
-                })
-                .Select(data => new AppUserViewModel
-                {
-                    Id = data.User.Id,
-                    Name = data.User.Name,
-                    Surname = data.User.Surname,
-                    UserName = data.User.UserName,
-                    Phone = data.User.Phone,
-                    Email = data.User.Email,
-                    IsSubcriber = data.User.IsSubscriber,
-                    Roles = data.Roles.ToList()
-                })
-                .ToListAsync();
+                    Id = x.Category.Id.ToString(),
+                    Name = x.Category.Name
+                }).FirstOrDefault(),
+                Roles = _userManager.GetRolesAsync(_).Result.ToList()
+               
+            }).ToListAsync();
 
-            return Response<List<AppUserViewModel>>.Success(usersWithRoles, 200);
+            return Response<List<AppUserViewModel>>.Success(users,200);
         }
+
         public async Task<Response<NoDataViewModel>> ApproveUsersAccount(string userId)
         {
             var isUserExist = await _userManager.FindByIdAsync(userId);
@@ -99,6 +119,17 @@ namespace NewsApp.SERVICE.Services.Concrete
             if (isUserExist == null)
             {
                 return Response<NoDataViewModel>.Fail("There is user matched given id", 404, true);
+            }
+
+            if(request.Image != null || request.Image.Length != 0)
+            {
+                byte[] pictureBytes;
+                using (var memoryStream = new MemoryStream()) 
+                {
+                    await request.Image.CopyToAsync(memoryStream);
+                    pictureBytes = memoryStream.ToArray();
+                    isUserExist.Image = pictureBytes;
+                }
             }
 
             isUserExist.Name = request.Name;
@@ -123,12 +154,17 @@ namespace NewsApp.SERVICE.Services.Concrete
                 Name = _.Name,
                 Surname = _.Surname,
                 Phone = _.Phone,
-                Image = _.Image,
+                Image = _.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(_.Image),
                 HomeLand = _.HomeLand,
                 Email = _.Email,
                 BirthDate = _.BirthDate,
                 IsSubcriber = _.IsSubscriber,
-                UserName = _.UserName
+                UserName = _.UserName,
+                UserCategory = _context.UserCategories.Where(x => x.UserId == _.Id).Select(x => new CategoryViewModel()
+                {
+                    Id = x.Category.Id.ToString(),
+                    Name = x.Category.Name
+                }).FirstOrDefault(),
             }).FirstOrDefaultAsync();
 
             if(isUserExist == null)
@@ -138,6 +174,40 @@ namespace NewsApp.SERVICE.Services.Concrete
 
             return Response<AppUserViewModel>.Success(isUserExist, 200);
             
+        }
+        public async Task<Response<List<AppUserViewModel>>> GetDirectorsOfCategory(string categoryId)
+        {
+            var category = _context.Categories.Where(_ => _.Id.ToString() == categoryId).FirstOrDefault();
+            var crossList = _context.UserCategories.Where(_ => _.CategoryId == Guid.Parse(categoryId)).ToList();
+            var directors = await _userManager.GetUsersInRoleAsync("director");
+            var departmentDirectors = directors.Where(_ => crossList.Any(x => x.UserId == _.Id)).Select(_ => new AppUserViewModel()
+            {
+                Id = _.Id,
+                Name = _.Name,
+                Surname = _.Surname,
+                UserName = _.UserName,
+                Email = _.Email,
+                Phone = _.Phone,
+                Image = _.Image == null ? null :"data:image/jpg;base64," + Convert.ToBase64String(_.Image),
+            }).ToList();
+            return Response<List<AppUserViewModel>>.Success(departmentDirectors, 200);
+        }
+        public async Task<Response<List<AppUserViewModel>>> GetAuthorsOfCategory(string categoryId)
+        {
+            var department = _context.Categories.Where(_ => _.Id.ToString() == categoryId).FirstOrDefault();
+            var crossList = _context.UserCategories.Where(_ => _.CategoryId == Guid.Parse(categoryId)).ToList();
+            var authors = _userManager.GetUsersInRoleAsync("writer");
+            var departmentAuthors = authors.Result.Where(_ => crossList.Any(x => x.UserId == _.Id)).Select(_ => new AppUserViewModel()
+            {
+                Id = _.Id,
+                Name = _.Name,
+                Surname = _.Surname,
+                UserName = _.UserName,
+                Email = _.Email,
+                Phone = _.Phone,
+                Image = _.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(_.Image),
+            }).ToList();
+            return Response<List<AppUserViewModel>>.Success(departmentAuthors, 200);
         }
     }
 }

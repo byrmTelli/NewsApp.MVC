@@ -4,6 +4,7 @@ using NewsApp.CORE.DBModels;
 using NewsApp.CORE.Generics;
 using NewsApp.CORE.ViewModels.AdminPageViewModels;
 using NewsApp.CORE.ViewModels.UserViewModels;
+using NewsApp.CORE.ViewModels.PageViewModels;
 using NewsApp.DAL.Context;
 using NewsApp.SERVICE.Services.Abstract;
 using System;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NewsApp.MVC.Areas.Admin.Models.ManageDepartmentViewModels;
 
 namespace NewsApp.SERVICE.Services.Concrete
 {
@@ -58,5 +60,6 @@ namespace NewsApp.SERVICE.Services.Concrete
             };
             return Response<ManageUserViewModel>.Success(manageUserViewModel, 200);
         }
+
     }
 }

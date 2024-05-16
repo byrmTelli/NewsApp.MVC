@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace NewsApp.CORE.RequestModels.UserRequestModels
         public DateTime? BirthDate { get; set; }
         public string? HomeLand { get; set; }
         public string? Phone { get; set; }
-        public string? Image { get; set; }
+        public IFormFile? Image { get; set; }
 
     }
 }

@@ -8,7 +8,6 @@ namespace NewsApp.CORE.RequestModels.CategoyRequestModels
 {
     public class CategoryRequestModel
     {
-        public string Id { get; set; }
         public string Name { get; set; }
     }
 }

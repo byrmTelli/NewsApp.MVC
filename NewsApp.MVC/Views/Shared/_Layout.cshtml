@@ -12,22 +12,23 @@
 
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <header class="">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow homepage-navbar">
             <div class="container-fluid items-center justify-content-between">
                 <div class="d-flex justify-content-center">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DailyNews</a>
+                    <a class="navbar-brand text-white fw-bolder website-brand" asp-area="" asp-controller="Home" asp-action="Index">DailyNews</a>
                 </div>
-                <div class="search-input-wrapper d-flex gap-2 align-items-center">
+                <div class="search-input-wrapper d-flex gap-2 align-items-center bg-white">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" class="custom-input" placeholder="search..." autocomplete="off"/>
+                    <input type="search" class="custom-input text-capitalize" placeholder="search..." autocomplete="off" />
                 </div>
                 <div>
-                    <partial name="navbarUserLoginSection"/>
+                    <partial name="navbarUserLoginSection" />
                 </div>
             </div>
         </nav>
     </header>
+
 
 
     <div class="container"><!--Mid Container Starts Here-->
