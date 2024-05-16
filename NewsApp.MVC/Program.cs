@@ -10,6 +10,7 @@ using NewsApp.MVC.Extensions;
 using NewsApp.MVC.Seeds;
 using NewsApp.SERVICE.Services.Abstract;
 using NewsApp.SERVICE.Services.Concrete;
+using System.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,13 @@ builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IAppRoleService, AppRoleService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IEmailService,EmailService>();
+
+builder.Services.AddScoped<LoginUserExtensionFilter>();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(typeof(LoginUserExtensionFilter));
+});
+
 //builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 #endregion
 

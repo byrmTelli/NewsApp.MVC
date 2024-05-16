@@ -25,7 +25,7 @@ namespace NewsApp.SERVICE.Services.Concrete
             _context = context;
         }
 
-
+        
         public async Task<Response<NoDataViewModel>>Delete(string id)
         {
             var isPostExist = await _context.Posts.Where(_ => _.Id.ToString() == id).FirstOrDefaultAsync();
@@ -43,7 +43,7 @@ namespace NewsApp.SERVICE.Services.Concrete
 
         public async Task<Response<List<PostViewModel>>> GettAllPosts()
         {
-            var allNews = await _context.Posts.Select(x => new PostViewModel()
+            var allNews = await _context.Posts.Where(x => x.IsPublished == true ).Select(x => new PostViewModel()
             {
                 Id = x.Id.ToString(),
                 Category = new CategoryViewModel() { Name = x.Category.Name },
@@ -136,5 +136,71 @@ namespace NewsApp.SERVICE.Services.Concrete
             throw new ArgumentException();
         }
 
+        public async Task<Response<List<PostViewModel>>> GetPostsByCategory(string categoryName)
+        {
+            var posts = await  _context.Posts.Where(_ => _.Category.Name.ToString().ToLower() == categoryName.ToLower()).Where(x => x.IsPublished == true).Select(_ => new PostViewModel()
+            {
+                Id = _.Id.ToString(),
+                Category = new CategoryViewModel() { Name = _.Category.Name },
+                Creator = new AppUserViewModel()
+                {
+                    Id = _.Creator.Id.ToString(),
+                    Name = _.Creator.Name,
+                    Surname = _.Creator.Surname,
+                },
+                IsSubscriberOnly = _.IsPrivateOnly,
+                Title = _.Title,
+                CreatedAt = _.CreatedAt,
+                Content = _.Content,
+                Image = _.Image
+            }).ToListAsync();
+
+            if (posts == null)
+            {
+                return Response<List<PostViewModel>>.Fail("There is no post matched given category id value", 404, true);
+            }
+
+            return Response<List<PostViewModel>>.Success(posts, 200);
+        }
+
+        public async Task<Response<List<PostViewModel>>> GetUnPublishedPostsByCategory(string categoryName)
+        {
+            var posts = await _context.Posts.Where(_ => _.Category.Name.ToString().ToLower() == categoryName.ToLower()).Where(_ => _.IsPublished == false).Select(_ => new PostViewModel()
+            {
+                Id = _.Id.ToString(),
+                Category = new CategoryViewModel() { Name = _.Category.Name },
+                Creator = new AppUserViewModel()
+                {
+                    Id = _.Creator.Id.ToString(),
+                    Name = _.Creator.Name,
+                    Surname = _.Creator.Surname,
+                },
+                IsSubscriberOnly = _.IsPrivateOnly,
+                Title = _.Title,
+                CreatedAt = _.CreatedAt,
+                Content = _.Content,
+                Image = _.Image
+            }).ToListAsync();
+
+            if (posts == null)
+            {
+                return Response<List<PostViewModel>>.Fail("There is no post matched given category id value", 404, true);
+            }
+
+            return Response<List<PostViewModel>>.Success(posts, 200);
+        }
+
+        public async Task<Response<NoDataViewModel>> ApprovePost(string postId)
+        {
+            var isPostExist =await _context.Posts.Where(_ => _.Id.ToString() == postId).FirstOrDefaultAsync();
+            if (isPostExist == null)
+            {
+                return Response<NoDataViewModel>.Fail("There is no post matched given id value", 404, true);
+            }
+
+            isPostExist.IsPublished = true;
+            await _context.SaveChangesAsync();
+            return Response<NoDataViewModel>.Success(200);
+        }
     }
 }

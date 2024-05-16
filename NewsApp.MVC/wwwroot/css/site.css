@@ -36,8 +36,18 @@ a{
     border-radius: 5px;
 }
 
-/*Navbars Here*/
+.login-dropdown-menu{
+    position:absolute;
+    margin-left:85px;
+}
 
+/*Navbars Here*/
+.navbar-user-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
 .section-navitems-wrapper{
     witdh:100%;
@@ -76,15 +86,39 @@ a{
 }
 
 .search-input-wrapper{
+    min-width:450px;
     border: 1px solid gray;
     padding-top:5px;
     padding-bottom:5px;
     padding-left:15px;
+    padding-right:15px;
+    border-radius:15px;
+}
+
+.card-group .card:hover {
+    transform: scale(1.2);
+    transition: transform 0.3s ease;
+}
+
+.homepage-navbar{
+    min-height:100px;
+}
+.website-brand{
+    font-size:30px;
+}
+
+.hero-sections{
+    padding:5px;
+    height:100%;
+}
+
+.caraousals-image{
+    max-height:350px;
 }
 
 /*DetailPage Here*/
-.detail-image{
-    max-width:960px;
+.detail-image {
+    max-width: 960px;
 }
 
 .detail-content{
@@ -97,3 +131,17 @@ a{
     list-style:none;
 }
 
+/*user profile page*/
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+
+#editor{
+    height:300px;
+}
+
+
+.section-item:hover{
+    border-bottom: 1px solid black;
+}

@@ -1,0 +1,68 @@
+﻿@model ManageDepartmentsPageViewModel
+﻿@using System.Security.Claims
+
+<div class="row">
+    <div class="col d-flex align-items-center justify-content-between">
+        <h4>Manage Departments Page</h4>
+        <!-- Button trigger modal -->
+        @{
+            if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+            {
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                    New Department
+                </button>
+            }
+        }
+
+    </div>
+</div>
+<hr />
+
+<div class="row">
+    <table id="datatable" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CategoryViewModel)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td class="d-flex align-items-center justify-content-center gap-1 p-2">
+                        <a asp-controller="Admin" asp-action="ManageDepartment" asp-route-departmentId="@item.Id" class="btn btn-outline-primary">Detay</a>
+                        <a class="btn btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Create New Department</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-controller="Admin" asp-action="CreateCategory" method="post">
+                <div class="modal-body">
+                    <div class="form-group d-flex gap-1 align-items-center justify-content-center">
+                        <label asp-for="@Model.CategoryRequestModel.Name"></label>
+                        <input asp-for="@Model.CategoryRequestModel.Name" class="form-control" autocomplete="off" />
+                        <span asp-validation-for="@Model.CategoryRequestModel.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

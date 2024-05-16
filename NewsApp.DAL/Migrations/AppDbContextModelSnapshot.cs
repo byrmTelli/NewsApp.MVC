@@ -188,8 +188,8 @@ namespace NewsApp.DAL.Migrations
                     b.Property<string>("HomeLand")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("TEXT");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("BLOB");
 
                     b.Property<bool>("IsSubscriber")
                         .HasColumnType("INTEGER");
@@ -234,6 +234,9 @@ namespace NewsApp.DAL.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("UserCategoryId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -246,6 +249,8 @@ namespace NewsApp.DAL.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("UserCategoryId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -408,16 +413,25 @@ namespace NewsApp.DAL.Migrations
                     b.Navigation("Permission");
                 });
 
+            modelBuilder.Entity("NewsApp.CORE.DBModels.AppUser", b =>
+                {
+                    b.HasOne("NewsApp.CORE.DBModels.Category", "UserCategory")
+                        .WithMany("Users")
+                        .HasForeignKey("UserCategoryId");
+
+                    b.Navigation("UserCategory");
+                });
+
             modelBuilder.Entity("NewsApp.CORE.DBModels.AppUserCategory", b =>
                 {
                     b.HasOne("NewsApp.CORE.DBModels.Category", "Category")
-                        .WithMany("UserCategories")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NewsApp.CORE.DBModels.AppUser", "User")
-                        .WithMany("UserCategories")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -451,16 +465,11 @@ namespace NewsApp.DAL.Migrations
                     b.Navigation("RolePermissions");
                 });
 
-            modelBuilder.Entity("NewsApp.CORE.DBModels.AppUser", b =>
-                {
-                    b.Navigation("UserCategories");
-                });
-
             modelBuilder.Entity("NewsApp.CORE.DBModels.Category", b =>
                 {
                     b.Navigation("Posts");
 
-                    b.Navigation("UserCategories");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("NewsApp.CORE.DBModels.Permission", b =>

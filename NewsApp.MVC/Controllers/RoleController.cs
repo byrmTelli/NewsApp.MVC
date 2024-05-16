@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.RequestModels.RoleRequestModels;
 using NewsApp.CORE.ViewModels.RoleViewModels;
+using NewsApp.MVC.Areas.Admin.Controllers;
 using NewsApp.MVC.Extensions;
 using NewsApp.SERVICE.Services.Abstract;
 
@@ -58,13 +59,6 @@ namespace NewsApp.MVC.Controllers
             return RedirectToAction(nameof(RoleController.Index));
         }
 
-        public async Task<IActionResult> AssignRoleToUser()
-        {
-           var allRoles =await _appRoleService.GetAllRoles();
-            ViewBag.AllRoles = allRoles.Data;
-            var allUsers = await _appUserService.GetAllUsers();
-            return View(allUsers.Data);
-        }
         [HttpPost]
         public async Task<IActionResult> AssignRoleToUser(string userId, string roleId)
         {
@@ -91,7 +85,8 @@ namespace NewsApp.MVC.Controllers
             }
             await _userManager.AddToRoleAsync(currentUser, role.Name);
 
-            return RedirectToAction(nameof(AssignRoleToUser));
+            return RedirectToAction("AssignCategoryToUser", "Admin", new { area = "Admin" });
+
         }
 
     }

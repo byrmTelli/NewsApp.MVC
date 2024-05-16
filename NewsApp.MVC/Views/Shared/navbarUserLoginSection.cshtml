@@ -3,32 +3,44 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <ul class="navbar-nav me-2">
-        <li class="nav-item dropdown" id="user-navbar-dropdown-wrapper">
-            <a class="nav-link dropdown-toggle text-capitalize" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                @User.Identity.Name
-            </a>
-            <ul class="dropdown-menu" id="user-navbar-dropdown" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Profile</a></li>
-                <li><a class="dropdown-item" asp-controller="User" asp-action="PasswordChange">Şifre Değiştir</a></li>
-                <li><a class="dropdown-item" asp-controller="Post" asp-action="Create">New Post</a></li>
-                <li><a class="dropdown-item" asp-controller="User" asp-action="UpdateUser">Kullanıcı Güncelle</a></li>
-                @{
-                    if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
-                    {
-                        <li><a class="dropdown-item"  asp-area="Admin"  asp-controller="Admin" asp-action="Index">Admin</a></li>
-                        <li><a class="dropdown-item"  asp-controller="Admin" asp-action="AssignCategoryToUser">Add Department Leader</a></li>
-
-                        <li><a class="dropdown-item" asp-controller="Role" asp-action="AssignRoleToUser">Manage Roles</a></li>
-                    }
-                }
-                <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut" asp-route-returnurl="/Home/Index">Çıkış</a></li>
+    <div class="row z-3">
+        <div class="col d-flex gap-2">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown position-relative" id="user-navbar-dropdown-wrapper">
+                    <a class="nav-link dropdown-toggle text-capitalize text-white fw-bold text-center" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @ViewData["CurrentUser"]
+                    </a>
+                    <ul class="dropdown-menu login-dropdown-menu position-absolute" id="user-navbar-dropdown" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Profile</a></li>
+                        @{
+                            if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin") || User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "director"))
+                            {
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Admin" asp-action="Index">Management Panel</a></li>
+                            }
+                            if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin") || User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "director") || User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "writer"))
+                            {
+                                <li><a class="dropdown-item" asp-controller="Post" asp-action="Create">New Post</a></li>
+                            }
+                        }
+                        <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut" asp-route-returnurl="/Home/Index">Çıkış</a></li>
+                    </ul>
+                </li>
             </ul>
-        </li>
-    </ul>
+            @{
+                if (@ViewData["ProfileImage"] == null)
+                {
+                    <img class="navbar-user-image" src="https://t3.ftcdn.net/jpg/06/33/54/78/360_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg" />
+                }
+                else
+                {
+                    <img class="navbar-user-image" src="@ViewData["ProfileImage"]" />
+                }
+            }
+        </div>
+    </div>
 }
 else
 {
-    <a class="btn btn-outline-dark" asp-area="" asp-controller="Home" asp-action="SignUp">Sign Up</a>
-    <a class="btn btn-outline-dark mx-1" asp-area="" asp-controller="Home" asp-action="SignIn">Sign In</a>
+    <a class="btn btn-outline-dark text-white fw-bold" asp-area="" asp-controller="Home" asp-action="SignUp">Sign Up</a>
+    <a class="btn btn-outline-dark text-white fw-bold" asp-area="" asp-controller="Home" asp-action="SignIn">Login</a>
 }

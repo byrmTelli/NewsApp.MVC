@@ -1,32 +1,5 @@
 ﻿@model ManageUserViewModel
-
-<div class="row d-flex">
-    <div class="col">
-        <div class="custom-admin-card text-center bg-danger text-white">
-            <h4>Writer</h4>
-            <h2>@Model.WriterCount</h2>
-        </div>
-    </div>
-    <div class="col">
-        <div class="custom-admin-card text-center bg-success text-white">
-            <h4>Manager</h4>
-            <h1>@Model.ManagerCount</h1>
-        </div>
-    </div>
-    <div class="col">
-        <div class="custom-admin-card text-center bg-warning text-white">
-            <h4>Users</h4>
-            <h5>(Approved)</h5>
-            <h2>10</h2>
-        </div>
-    </div>
-    <div class="col offset">
-        <div class="custom-admin-card text-center bg-primary text-white">
-            <h4>Users</h4>
-            <h2>@Model.TotalUser</h2>
-        </div>
-    </div>
-</div>
+﻿@using System.Security.Claims
 
 <div class="row mt-4">
     <div class="col-md-10 offset-1">
@@ -40,7 +13,12 @@
                         <th>Username</th>
                         <th>Email</th>
                         <th>Status</th>
-                        <th></th>
+                        @{
+                            if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                            {
+                                <th></th>
+                            }
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -59,14 +37,28 @@
                                 {
                                     <form method="post" asp-controller="Admin" asp-action="ApproveUsersAccount">
                                         <input type="hidden" name="userId" value="@item.Id" />
-                                        <button type="submit" class="btn btn-outline-warning">Onayla</button>
+                                        @{
+                                            if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                                            {
+                                                <button type="submit" class="btn btn-outline-warning">Onayla</button>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-warning">Yönetici Onayı Bekliyor</span>
+                                            }
+                                        }
                                     </form>
                                 }
                             </td>
-                            <td class="d-flex align-items-center justify-content-center gap-1 p-2">
-                                <a class="btn btn-outline-primary">Detay</a>
-                                <a class="btn btn-outline-danger">Delete</a>
-                            </td>
+                            @{
+                                if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                                {
+                                    <td class="d-flex align-items-center justify-content-center gap-1 p-2">
+                                        <a class="btn btn-outline-primary">Detay</a>
+                                        <a class="btn btn-outline-danger">Delete</a>
+                                    </td>
+                                }
+                            }
                         </tr>
                     }
                 </tbody>

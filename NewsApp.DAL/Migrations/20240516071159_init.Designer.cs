@@ -11,8 +11,8 @@ using NewsApp.DAL.Context;
 namespace NewsApp.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240317134827_mig-1")]
-    partial class mig1
+    [Migration("20240516071159_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -148,6 +148,21 @@ namespace NewsApp.DAL.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
+            modelBuilder.Entity("NewsApp.CORE.DBModels.AppRolePermission", b =>
+                {
+                    b.Property<string>("AppRoleId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("AppRoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("AppRolePermission");
+                });
+
             modelBuilder.Entity("NewsApp.CORE.DBModels.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -176,8 +191,8 @@ namespace NewsApp.DAL.Migrations
                     b.Property<string>("HomeLand")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("TEXT");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("BLOB");
 
                     b.Property<bool>("IsSubscriber")
                         .HasColumnType("INTEGER");
@@ -222,6 +237,9 @@ namespace NewsApp.DAL.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("UserCategoryId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -234,6 +252,8 @@ namespace NewsApp.DAL.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("UserCategoryId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -266,6 +286,21 @@ namespace NewsApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("NewsApp.CORE.DBModels.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permission");
                 });
 
             modelBuilder.Entity("NewsApp.CORE.DBModels.Post", b =>
@@ -362,16 +397,44 @@ namespace NewsApp.DAL.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("NewsApp.CORE.DBModels.AppRolePermission", b =>
+                {
+                    b.HasOne("NewsApp.CORE.DBModels.AppRole", "AppRole")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("AppRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NewsApp.CORE.DBModels.Permission", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppRole");
+
+                    b.Navigation("Permission");
+                });
+
+            modelBuilder.Entity("NewsApp.CORE.DBModels.AppUser", b =>
+                {
+                    b.HasOne("NewsApp.CORE.DBModels.Category", "UserCategory")
+                        .WithMany("Users")
+                        .HasForeignKey("UserCategoryId");
+
+                    b.Navigation("UserCategory");
+                });
+
             modelBuilder.Entity("NewsApp.CORE.DBModels.AppUserCategory", b =>
                 {
                     b.HasOne("NewsApp.CORE.DBModels.Category", "Category")
-                        .WithMany("UserCategories")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NewsApp.CORE.DBModels.AppUser", "User")
-                        .WithMany("UserCategories")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -400,16 +463,21 @@ namespace NewsApp.DAL.Migrations
                     b.Navigation("Creator");
                 });
 
-            modelBuilder.Entity("NewsApp.CORE.DBModels.AppUser", b =>
+            modelBuilder.Entity("NewsApp.CORE.DBModels.AppRole", b =>
                 {
-                    b.Navigation("UserCategories");
+                    b.Navigation("RolePermissions");
                 });
 
             modelBuilder.Entity("NewsApp.CORE.DBModels.Category", b =>
                 {
                     b.Navigation("Posts");
 
-                    b.Navigation("UserCategories");
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("NewsApp.CORE.DBModels.Permission", b =>
+                {
+                    b.Navigation("RolePermissions");
                 });
 #pragma warning restore 612, 618
         }

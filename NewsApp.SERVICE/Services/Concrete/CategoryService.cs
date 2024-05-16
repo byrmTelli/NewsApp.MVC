@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NewsApp.CORE.DBModels;
+using NewsApp.CORE.Generics;
+using NewsApp.CORE.RequestModels.CategoyRequestModels;
 using NewsApp.CORE.ViewModels.CategoryViewModels;
+using NewsApp.CORE.ViewModels.CustomViewModels;
 using NewsApp.DAL.Context;
 using NewsApp.SERVICE.Services.Abstract;
 using System;
@@ -21,6 +24,27 @@ namespace NewsApp.SERVICE.Services.Concrete
             _appDbContext = appDbContext;
             _userManager = userManager;
         }
+
+        public async Task<Response<NoDataViewModel>> CreateCategory(CategoryRequestModel request)
+        {
+            var isCategoryExist = await _appDbContext.Categories.Where(_ => _.Name.ToLower() == request.Name.ToLower()).FirstOrDefaultAsync();
+            if(isCategoryExist != null)
+            {
+                return Response<NoDataViewModel>.Fail("Bu kategori zaten mevcut", 404, true);
+            }
+
+            var newCategory = new Category()
+            {
+                Name = request.Name
+            };
+
+            _appDbContext.Categories.Add(newCategory);
+
+            await _appDbContext.SaveChangesAsync();
+            
+            return Response<NoDataViewModel>.Success(201);
+        }
+
         public async Task<List<CategoryViewModel>> GetAllCategories()
         {
             var allCategories = await _appDbContext.Categories
@@ -36,7 +60,7 @@ namespace NewsApp.SERVICE.Services.Concrete
 
         public async Task<CategoryViewModel> GetCategoryById(string id)
         {
-            var isCategoryExist = await  _appDbContext.Categories.Where(_ => _.Id.ToString() == id).FirstOrDefaultAsync();
+            var isCategoryExist = await  _appDbContext.Categories.Where(_ => _.Id.ToString() == id.ToUpper()).FirstOrDefaultAsync();
             // buraya kontrol ekle
 
 
@@ -51,7 +75,7 @@ namespace NewsApp.SERVICE.Services.Concrete
 
         }
 
-        public async Task<List<CategoryViewModel>> GetUsersCategory(string userId)
+        public async Task<CategoryViewModel> GetUsersCategory(string userId)
         {
             var result =await _appDbContext.UserCategories
                 .Include(uc => uc.Category)
@@ -60,7 +84,7 @@ namespace NewsApp.SERVICE.Services.Concrete
                 {
                     Id = _.Category.Id.ToString(),
                     Name = _.Category.Name
-                }).ToListAsync();
+                }).FirstOrDefaultAsync();
 
             return result;
         }

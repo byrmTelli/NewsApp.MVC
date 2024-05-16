@@ -1,97 +1,78 @@
 ﻿@{
-    ViewData["Title"] = "DailyNews";
+    ViewData["Title"] = "Home";
 }
-
-<partial name="navbarCategoriesSection"/>
-
+<partial name="navbarCategoriesSection" />
 <div class="text-center">
     <div class="row mt-2 items-center justify-content-center">
-        <h5 class="text-start">Global</h5>
-        <hr />
+        <div class="row align-items-center justify-content-center">
+            <!--Carousal Baslangic-->
+            <div class="col-md-8 ">
+                <div id="carouselExampleCaptions" class="carousel slide">
+                    <div class="carousel-indicators">
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <button type="button"
+                                    data-bs-target="#carouselExampleCaptions"
+                                    data-bs-slide-to="@i"
+                                    class="@(i == 0 ? "active" : "")"
+                                    aria-current="@(i == 0 ? "true" : "false")"
+                                    aria-label="Slide @(i + 1)">
+                            </button>
+
+                        }
+                    </div>
+                    <div class="carousel-inner shadow">
+                        @for (int x = 0; x < Model.Count; x++)
+                        {
+
+                            <div class="carousel-item @(x == 0 ? "active" : "")">
+                                <img src="@Model[x].Image" class="d-block w-100 caraousals-image" alt="...">
+                                <a asp-controller="Home" asp-action="Detail" asp-route-id="@Model[x].Id">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>@Model[x].Title</h5>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <!--Carousal Bitiş-->
+
+        </div>
+
+        <div class="row p-2 mt-4">
+            <h5 class="text-start">Global</h5>
+            <hr />
+        </div>
         @foreach (var newsItem in Model)
         {
             <div class="col-md-3">
-                <div class="card-group mt-2">
+                <div class="card-group mt-2 shadow">
                     <a asp-controller="Home" asp-action="Detail" asp-route-id="@newsItem.Id">
                         <div class="card">
                             <img src="@newsItem.Image" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title">@newsItem.Title</h5>
                                 <p class="card-text"><small class="text-muted">@newsItem.Creator.Name @newsItem.Creator.Surname | @newsItem.CreatedAt</small></p>
+                                @if (newsItem.IsSubscriberOnly == true)
+                                {
+                                    <p class="text-center text-warning fw-bold">Subscriber Only</p>
+                                }
                             </div>
                         </div>
                     </a>
                 </div>
             </div>
-        }
-    </div>
-    <div class="row mt-2 items-center justify-content-center">
-        <h5 class="text-start">Sports</h5>
-        <hr />
-        @foreach (var newsItem in Model)
-        {
-            if (newsItem.Category.Name == "Sports")
-            {
-                <div class="col-md-3">
-                    <div class="card-group mt-2">
-                        <a asp-controller="Home" asp-action="Detail" asp-route-id="@newsItem.Id">
-                            <div class="card">
-                                <img src="@newsItem.Image" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">@newsItem.Title</h5>
-                                    <p class="card-text"><small class="text-muted">@newsItem.Creator.Name @newsItem.Creator.Surname  | @newsItem.CreatedAt</small></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-    </div>
-    <div class="row mt-2 items-center justify-content-center">
-        <h5 class="text-start">Politics</h5>
-        <hr />
-        @foreach (var newsItem in Model)
-        {
-            if (newsItem.Category.Name == "Politics")
-            {
-                <div class="col-md-3">
-                    <div class="card-group mt-2">
-                        <a asp-controller="Home" asp-action="Detail" asp-route-id="@newsItem.Id">
-                            <div class="card">
-                                <img src="@newsItem.Image" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">@newsItem.Title</h5>
-                                    <p class="card-text"><small class="text-muted">@newsItem.Creator.Name @newsItem.Creator.Surname  | @newsItem.CreatedAt</small></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-    </div>
-    <div class="row mt-2 items-center justify-content-center">
-        <h5 class="text-start">Technology</h5>
-        <hr />
-        @foreach (var newsItem in Model)
-        {
-            if (newsItem.Category.Name == "Technology")
-            {
-                <div class="col-md-3">
-                    <div class="card-group mt-2">
-                        <a asp-controller="Home" asp-action="Detail" asp-route-id="@newsItem.Id">
-                            <div class="card">
-                                <img src="@newsItem.Image" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">@newsItem.Title</h5>
-                                    <p class="card-text"><small class="text-muted">@newsItem.Creator.Name @newsItem.Creator.Surname  | @newsItem.CreatedAt</small></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            }
         }
     </div>
 </div>

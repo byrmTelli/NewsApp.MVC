@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "DailyNews";
+}
+<partial name="navbarCategoriesSection" />
+<div class="row mt-2 items-center justify-content-center">
+    @if(Model.Count == 0)
+    {
+        <div class="text-center">
+            <h1 class="text-danger">There is no news in this category...</h1>
+            <h4>Check other categories</h4>
+        </div>
+    }
+    else
+    {
+        @foreach (var newsItem in Model)
+        {
+            <div class="col-md-3">
+                <div class="card-group mt-2">
+                    <a asp-controller="Home" asp-action="Detail" asp-route-id="@newsItem.Id">
+                        <div class="card">
+                            <img src="@newsItem.Image" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">@newsItem.Title</h5>
+                                <p class="card-text"><small class="text-muted">@newsItem.Creator.Name @newsItem.Creator.Surname | @newsItem.CreatedAt</small></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    }
+</div>

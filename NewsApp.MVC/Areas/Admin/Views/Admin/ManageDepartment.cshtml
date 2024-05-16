@@ -1,0 +1,103 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Manage Department";
+}
+<h3>Departments</h3>
+<hr />
+<div class="row">
+    <div class="col">
+        <div class="row bg-dark text-center text-white rounded-top">
+            <h4 class="p-2">@Model.Department.Name</h4>
+        </div>
+        <div class="row manage-departments-card-body rounded-bottom p-2">
+            <div class="col-md-4 mt-2">
+                <h6 class="text-center">Director</h6>
+                <div class="row p-1 justify-content-center gap-1">
+                    @foreach(var director in Model.Director)
+                    {
+                        <div class="user-cards-wrapper">
+                            @if(director.Image == null)
+                            {
+                                <img src="https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg" height="60px" class="rounded-circle mt-2" />
+                            }
+                            else
+                            {
+                                <img src="@director.Image" height="60px" class="rounded-circle mt-2" />
+                            }
+                            <div class="row">
+                                <p>@director.Name @director.Surname</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-8 mt-2">
+                <h6 class="">Authors | (@Model.Authors.Count)</h6>
+                <div class="row p-2 d-flex gap-1">
+                    @foreach(var author in Model.Authors)
+                    {
+                        <div class="user-cards-wrapper">
+                            @if (author.Image == null)
+                            {
+                                <img src="https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg" height="60px" class="rounded-circle mt-2" />
+                            }
+                            else
+                            {
+                                <img src="@author.Image" height="60px" class="rounded-circle mt-2" />
+                            } 
+                            <div class="row">
+                                <p>@author.Name @author.Surname</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-2 manage-departments-card-body rounded-2 p-2">
+    <div class="col rounded-2">
+        <div class="row">
+            <h5>Posts <span class="text-danger" style="font-size:14px;">(You are just able to see first 3 of the recent posts in this table.)</span></h5>
+            <div class="col bg-white rounded-2">
+                <table class="table table-striped">
+                    <thead>
+                       <tr>
+                           <th></th>
+                           <th>Author</th>
+                           <th>Date</th>
+                           <th>Status</th>
+                           <th>Category</th>
+                           <th>
+                               <a class="btn btn-dark">More</a>
+                           </th>
+                       </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var post in Model.Posts)
+                        {
+                            <tr>
+                                <td></td>
+                                <td>@post.Creator.Name @post.Creator.Surname</td>
+                                <td>12.5.2024</td>
+                                <td class="text-success">Waiting for approve</td>
+                                <td>@post.Category.Name</td>
+                                <td>
+                                    <form asp-area="Admin" asp-controller="Admin" asp-action="ApprovePost" method="post">
+                                        <input type="hidden" name="departmentId" value="@Model.Department.Id"/>
+                                        <input type="hidden" name="postId" value="@post.Id" />
+                                        <button type="submit" class="btn btn-outline-success">Approve</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

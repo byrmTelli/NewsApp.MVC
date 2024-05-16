@@ -11,6 +11,6 @@ namespace NewsApp.CORE.DBModels
     {
         public string Name { get; set; }
         public List<Post> Posts { get; set; }
-        public List<AppUserCategory> UserCategories { get; set; } = new List<AppUserCategory>();
+        public List<AppUser> Users { get; set; } = new List<AppUser>();
     }
 }

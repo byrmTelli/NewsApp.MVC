@@ -6,45 +6,62 @@
 @model AppUserViewModel
 
 
-
-<div class="text-center">
-    <h4>Kullanıcı Bilgileri</h4>
-    <hr/>
-</div>
-
 <div class="row">
-    <div class="col-md-4 offset-md-4">
-        <user-picture-thumbnail picture-url="" class="rounded" style="width:300px"></user-picture-thumbnail>
-    </div>
-</div>
+    <div class="row">
+        <div class="row p-4 rounded gap-1 justify-content-center">
+            <div class="col-md-4 d-flex flex-column align-items-center justify-content-center bg-light rounded-2">
+                @if (@Model.Image == null)
+                {
+                    <img class="rounded-circle profile-image mt-4 shadow" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTet-jk67T6SYdHW04eIMLygHzEeJKobi9zdg&usqp=CAU" />
+                }
+                else
+                {
+                    <img class="rounded-circle profile-image mt-4 shadow" src="@Model.Image" />
 
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <form asp-controller="User" asp-action="UpdateUser" method="post">
-            <div class="d-flex align-items-center gap-2">
-                <label asp-for="UserName" class="form-label">Username: </label>
-                <input asp-for="UserName" autocomplete="off" class="outline-none border-0 custom-input" />
+                }
+                <div class="col-8 d-flex flex-column justify-content-center text-center">
+                    <h3 class="mt-4">@Model.Name @Model.Surname</h3>
+                    <h5 class=" p-2 text-center d-flex flex-column gap-1">
+                        @foreach (var role in Model.Roles)
+                        {
+                            <span class="text-capitalize p-1 bg-dark text-white rounded-1">@role</span>
+                        }
+                        @if (Model.UserCategory != null)
+                        {
+                            <span class="text-capitalize">@Model.UserCategory.Name</span>
+                        }
+                    </h5>
+                </div>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <label asp-for="Name" class="form-label">Name: </label>
-                <input asp-for="Name" autocomplete="off" class="outline-none border-0 custom-input" />
+            <div class="col-md-7 bg-light p-4 rounded-1">
+                <div class="col d-flex justify-content-between">
+                    <div class="d-flex gap-2 align-items-center justify-content-center">
+                        <i class="fa-solid fa-bookmark fs-2"></i>
+                        <h5>Kullanıcı Bilgileri</h5>
+                    </div>
+                    <div>
+                        <a asp-controller="User" asp-action="PasswordChange" class="btn btn-primary">Parola Değiştir</a>
+                        <a asp-controller="User" asp-action="UpdateUser" class="btn btn-warning">Güncelle</a>
+                    </div>
+                </div>
+                <hr />
+                <div class="col p-2">
+                    <p class="bg-white p-2 rounded-1"><span class="fw-bold">İsim:</span> @Model.Name @Model.Surname</p>
+                    <p class="bg-white p-2 rounded-1"><span class="fw-bold">Email:</span> @Model.Email</p>
+                    <p class="bg-white p-2 rounded-1"><span class="fw-bold">Telefon:</span> @Model.Phone</p>
+                </div>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <label asp-for="Surname" class="form-label">Surname: </label>
-                <input asp-for="Surname" autocomplete="off" class="outline-none border-0 custom-input" />
+            <div class="col-md-11 bg-light rounded-1 p-4">
+                <div class="d-flex gap-2 align-items-center">
+                    <i class="fa-solid fa-book-open fs-2"></i>
+                    <h5>Hakkımda</h5>
+                </div>
+                <hr />
+                <p>
+                    What is Lorem Ipsum?
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </p>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <label asp-for="Email" class="form-label">Email: </label>
-                <input asp-for="Email" autocomplete="off" class="outline-none border-0 custom-input" />
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <label asp-for="HomeLand" class="form-label">HomeLand: </label>
-                <input asp-for="HomeLand" autocomplete="off" class="outline-none border-0 custom-input" />
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <label asp-for="Phone" class="form-label">Phone: </label>
-                <input asp-for="Phone" autocomplete="off" class="outline-none border-0 custom-input" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>

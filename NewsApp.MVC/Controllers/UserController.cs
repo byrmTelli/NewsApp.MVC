@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.RequestModels.UserRequestModels;
+using NewsApp.CORE.ViewModels.CategoryViewModels;
 using NewsApp.CORE.ViewModels.UserViewModels;
 using NewsApp.MVC.Extensions;
 using NewsApp.SERVICE.Services.Abstract;
@@ -18,45 +19,61 @@ namespace NewsApp.MVC.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IAppUserService _appUserService;  
         private readonly IFileProvider _fileProvider;
+        private readonly ICategoryService _categoryService;
 
 
         public UserController(
             SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager,
             IAppUserService appUserService,
-            IFileProvider fileProvider
+            IFileProvider fileProvider,
+            ICategoryService categoryService
             )
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _appUserService = appUserService;
             _fileProvider = fileProvider;
+            _categoryService = categoryService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
             var userClaims = User.Claims.ToList();
 
             var mail = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role);
 
-            var currentUser = _userManager.FindByNameAsync(User.Identity!.Name!);
+            var currentUser =await _userManager.FindByNameAsync(User.Identity!.Name!);
+            var currentUserRoles =await _userManager.GetRolesAsync(currentUser!);
+            var userCategory = await _categoryService.GetUsersCategory(currentUser.Id);
 
             var userViewModel = new AppUserViewModel()
             {
-                Email = currentUser.Result.Email,
-                UserName = currentUser.Result.UserName,
-                Phone = currentUser.Result.PhoneNumber,
-                Name = currentUser.Result.Name,
-                Surname = currentUser.Result.Surname,
-                HomeLand =currentUser.Result.HomeLand,
-                BirthDate = currentUser.Result.BirthDate,
+                Email = currentUser.Email,
+                UserName = currentUser.UserName,
+                Phone = currentUser.PhoneNumber,
+                Name = currentUser.Name,
+                Surname = currentUser.Surname,
+                HomeLand =currentUser.HomeLand,
+                BirthDate = currentUser.BirthDate,
+                Roles = currentUserRoles?.ToList(),
+                UserCategory = userCategory
 
             };
+            //Image converting
+            if (currentUser.Image != null)
+            {
+                var image = currentUser.Image;
+                var imageStream = new MemoryStream(image);
+                var Image = Convert.ToBase64String(image);
+                var convertedImage = "data:image/jpg;base64," + Image;
+                userViewModel.Image = convertedImage;
+                return View(userViewModel);
+            }
 
             return View(userViewModel);
         }
-
-
         [HttpGet]
         public async Task<IActionResult> SignOut(string returnurl = null)
         {
@@ -103,7 +120,7 @@ namespace NewsApp.MVC.Controllers
         public async Task<IActionResult> UpdateUser()
         {
             var currentUser =await _userManager.FindByNameAsync(User.Identity.Name);
-            var currentUserViewModel =await _appUserService.GetSingleUserById(currentUser.Id);
+            var currentUserViewModel =await _appUserService.GetSingleUserById(currentUser!.Id);
             return View(currentUserViewModel.Data);
         }
         [HttpPost]

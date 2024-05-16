@@ -16,10 +16,9 @@
                 <li><a class="dropdown-item" asp-controller="Role" asp-action="AssignRoleToUser">Manage Roles</a></li>
                 <li><a class="dropdown-item" asp-controller="Member" asp-action="Claims">User Claims</a></li>
                 @{
-                    if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                    if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin") || User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "director"))
                     {
-                        <li><a class="dropdown-item"  asp-area="Admin"  asp-controller="Admin" asp-action="Index">Admin</a></li>
-                        <li><a class="dropdown-item"  asp-controller="Admin" asp-action="AssignCategoryToUser">Add Department Leader</a></li>
+                        <li><a class="dropdown-item"  asp-area="Admin"  asp-controller="Admin" asp-action="Index">Management Panel</a></li>
                     }
                 }
                 <li><a class="dropdown-item" asp-controller="User" asp-action="SignOut" asp-route-returnurl="/Home/Index">Çıkış</a></li>

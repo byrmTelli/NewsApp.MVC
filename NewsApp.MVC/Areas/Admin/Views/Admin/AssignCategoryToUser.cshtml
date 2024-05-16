@@ -1,21 +1,84 @@
-﻿<div class="col">
-    @if (ViewBag.Categories != null && ViewBag.Categories.Count>0)
-    {
-        foreach (var category in ViewBag.Categories)
-        {
-            <a>@category.Name</a>
-        }
-    }
+﻿@model List<AppUserViewModel>
+<div class="row">
+    <h5>Rol ve Departman Yönetimi</h5>
+    <hr />
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="2">Kullanıcı</th>
+                        <th colspan="4">Rol ve Departman Bilgisi</th>
+                        <th colspan="4" class="text-center">Atama</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var data in Model)
+                        {
+                            <tr>
+                                <td colspan="2">@data.Name @data.Surname</td>
+                                <td colspan="4">
+                                    @foreach (var role in data.Roles)
+                                    {
+                                        if(role == "admin")
+                                        {
+                                            <span class="text-capitalize text-white bg-danger p-1 px-2 text-center rounded">@role</span>
+                                        }else if(role == "director")
+                                        {
+                                            <span class="text-capitalize bg-warning p-1 px-2 text-white rounded">@role</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-capitalize bg-primary p-1 px-2 text-white rounded">@role</span>
+                                        }
+                                    }
+                                    @if(@data.UserCategory != null){
+                                    <span class="text-capitalize bg-success text-white p-1 px-2 rounded">@data.UserCategory?.Name</span>
+                                    }
+                                </td>
 
-    <form asp-controller="Admin" asp-action="AssignCategoryToUser" method="post">
-        <div class="form-group">
-            <label for="userId">Kullanıcı ID:</label>
-            <input type="text" id="userId" name="userId" class="form-control" />
+                                <td colspan="4">
+                                    <div class="row">
+                                        <form asp-controller="Admin" asp-action="AssignCategoryToUser" method="post">
+                                            <input hidden name="UserId" value="@data.Id" />
+                                            <div class="row">
+                                                <div class="col d-flex align-items-center justify-content-center gap-2">
+                                                    <label>Departman</label>
+                                                    <select class="d-flex form-select" name="CategoryId">
+                                                        <option value="">Category Seçiniz</option>
+                                                        @foreach (var category in ViewBag.AllCategories)
+                                                        {
+                                                            <option value="@category.Id">@category.Name</option>
+                                                        })
+                                                    </select>
+                                                </div>
+
+                                                <div class="col d-flex align-items-center justify-content-center gap-2">
+                                                    <label>Rol</label>
+                                                    <select class="d-flex form-select" name="RoleId">
+                                                        <option value="">Role Seçiniz</option>
+                                                        @foreach (var role in ViewBag.AllRoles)
+                                                        {
+                                                            <option value="@role.Id">@role.RoleName</option>
+                                                        })
+                                                    </select>
+                                                </div>
+
+                                                <div class="col d-flex">
+                                                    <input type="submit" class="btn btn-success" />
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
         </div>
-        <div class="form-group">
-            <label for="categoryId">Kategori ID:</label>
-            <input type="text" id="categoryId" name="categoryId" class="form-control" />
-        </div>
-        <button type="submit" class="btn btn-primary">Kategoriyi Ata</button>
-    </form>
+    </div>
 </div>
+
