@@ -6,6 +6,8 @@
 
 Burada üye olmayan bir kullanıcı tarafından sitenin nasıl göründüğü kontrol edilebilir.
 
+<img src="https://github.com/byrmTelli/NewsApp.MVC/blob/master/uygulamaG%C3%B6rselleri/%C3%BCyelere-%C3%B6zel-haberler.png?raw=true"/>
+
 <h4>Kullanıcı Kayıt Aşaması</h4>
 <img src="https://github.com/byrmTelli/NewsApp.MVC/blob/master/uygulamaG%C3%B6rselleri/kay%C4%B1t-ol.png?raw=true" />
 
