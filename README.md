@@ -1,6 +1,14 @@
 <h3>Merhaba!</h3>
 <p>Bu proje Amatör bir haber sitesi başlıklı bir ürün ortaya çıkarmak amacıyla oluşturulmuştur. Proje yapısı MVC, proje içerisinde CK-Editor gibi WYSWYG toolları, Bootstrap gibi frontend kütüphaneleri kullanılmıştır. Temel yapıda 3 farklı rol mevcut olup bunlar yazar, yönetici ve admin şeklinde tanımlanmıştır. Veritabanı olarak geliştirme esnasında herkesin kolaylıkla kullanabilmesi için SQLite kullanılmıştır. Genel kullanıcıların kayıt işlemleri yönetici onayına gereksinim duymakla beraber, websitesi içerisinde sunulan haberler kayıtlı kullanıcı ve misafir yani kayıt olmayan kullanıcıları görebileceği şekilde temelde 2 kategoriye ayrılmıştır.</p>
 
+<h4>Roller</h4>
+<ul>
+  <li>Admin</li>
+  <li>Director</li>
+  <li>Writer (Author)</li>
+</ul>
+
+
 <h4>Anaysafa Görünümü</h4>
 <img src="https://github.com/byrmTelli/NewsApp.MVC/blob/master/uygulamaG%C3%B6rselleri/anasayfa.png?raw=true">
 
