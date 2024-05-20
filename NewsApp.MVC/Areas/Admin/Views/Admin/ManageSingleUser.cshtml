@@ -1,0 +1,121 @@
+﻿﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+@model ManageSingleUserViewModel
+<!--Kullanıcı Alanı-->
+<div class="row">
+    <div class="row">
+        <div class="row rounded gap-1 justify-content-center">
+            <div class="col-md-4 d-flex flex-column align-items-center justify-content-center bg-light rounded-2">
+                @if (@Model.User.Image == null)
+                {
+                    <img class="rounded-circle profile-image mt-4 shadow" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTet-jk67T6SYdHW04eIMLygHzEeJKobi9zdg&usqp=CAU" />
+                }
+                else
+                {
+                    <img class="rounded-circle profile-image mt-4 shadow" src="@Model.User.Image" />
+
+                }
+                <div class="col-8 d-flex flex-column justify-content-center text-center">
+                    <h3 class="mt-4">@Model.User.Name @Model.User.Surname</h3>
+                    <h5 class=" p-2 text-center d-flex flex-column gap-1">
+                        @foreach (var role in Model.User.Roles)
+                        {
+                            <span class="text-capitalize p-1 bg-dark text-white rounded-1">@role</span>
+                        }
+                        @if (Model.User.UserCategory != null)
+                        {
+                            <span class="text-capitalize">@Model.User.UserCategory.Name</span>
+                        }
+                    </h5>
+                    @if (Model.User.IsDeleted == true)
+                    {
+                        <p class="text-danger">Bu kullanıcı yönetici tarafından silindi.</p>
+                    }
+                </div>
+            </div>
+            <div class="col-md-7 bg-light p-4 rounded-1">
+                <div class="col d-flex justify-content-between">
+                    <div class="d-flex gap-2 align-items-center justify-content-center">
+                        <i class="fa-solid fa-bookmark fs-2"></i>
+                        <h5>Kullanıcı Bilgileri</h5>
+                    </div>
+                    <div>
+                        @if (Model.User.IsDeleted == true)
+                        {
+                            <form asp-area="Admin" asp-controller="Admin" asp-action="ReActiveUser" method="post">
+                                <input type="hidden" name="id" value="@Model.User.Id" />
+                                <button type="submit" class="btn btn-warning">Aktif Et</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-area="Admin" asp-controller="Admin" asp-action="DeleteUser" method="post">
+                                <input type="hidden" name="id" value="@Model.User.Id" />
+                                <button type="submit" class="btn btn-outline-danger">Sil</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+                <hr />
+                <div class="col p-2">
+                    <p class="bg-white p-2 rounded-1"><span class="fw-bold">İsim:</span> @Model.User.Name @Model.User.Surname</p>
+                    <p class="bg-white p-2 rounded-1"><span class="fw-bold">Email:</span> @Model.User.Email</p>
+                    <p class="bg-white p-2 rounded-1"><span class="fw-bold">Telefon:</span> @Model.User.Phone</p>
+                </div>
+            </div>
+            <div class="col-md-11 bg-light rounded-1 p-4">
+                <h4>Yazılar</h4>
+                <hr />
+                <table id="datatable" class="table table-hover mt-2">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Başlık</th>
+                            <th>Kategori</th>
+                            <th>Yazılma Tarihi</th>
+                            <th>Onay Durumu</th>
+                            <th>Durumu</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var post in @Model.Posts)
+                        {
+                            <tr>
+                                <td></td>
+                                <td>@post.Title</td>
+                                <td>@post.Category.Name</td>
+                                <td>@post.CreatedAt</td>
+                                <td>
+                                    @if (post.IsPublished == true)
+                                    {
+                                        <span class="text-success">Onaylandı</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-warning">Onay Bekliyor</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (post.IsDeleted == true)
+                                    {
+                                        <span class="text-danger">Silindi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">Aktif</span>
+                                    }
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Kullanıcı Alanı Bitişi-->

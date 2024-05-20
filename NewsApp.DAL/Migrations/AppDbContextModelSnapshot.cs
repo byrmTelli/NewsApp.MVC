@@ -191,6 +191,9 @@ namespace NewsApp.DAL.Migrations
                     b.Property<byte[]>("Image")
                         .HasColumnType("BLOB");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsSubscriber")
                         .HasColumnType("INTEGER");
 
@@ -276,6 +279,9 @@ namespace NewsApp.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -323,6 +329,9 @@ namespace NewsApp.DAL.Migrations
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsPrivateOnly")
                         .HasColumnType("INTEGER");

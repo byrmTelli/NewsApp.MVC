@@ -20,5 +20,6 @@ namespace NewsApp.SERVICE.Services.Abstract
         Task<Response<AppUserViewModel>> GetSingleUserById(string userId);
         Task<Response<List<AppUserViewModel>>> GetDirectorsOfCategory(string categoryId);
         Task<Response<List<AppUserViewModel>>> GetAuthorsOfCategory(string categoryId);
+        Task<Response<List<AppUserViewModel>>> GetAllUsersWithLinq();
     }
 }

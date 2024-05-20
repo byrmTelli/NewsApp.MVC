@@ -19,13 +19,15 @@ namespace NewsApp.MVC.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly ICategoryService _categoryService;
+        private readonly IAppUserService _appUserService;
         public HomeController(
             ILogger<HomeController> logger,
             IPostService postService,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IEmailService emailService,
-            ICategoryService categoryService
+            ICategoryService categoryService,
+            IAppUserService appUserService
             )
         {
             _logger = logger;
@@ -34,6 +36,7 @@ namespace NewsApp.MVC.Controllers
             _signInManager = signInManager;
             _emailService = emailService;
             _categoryService = categoryService;
+            _appUserService = appUserService;
         }
 
         public async Task<IActionResult> Index()
@@ -92,13 +95,6 @@ namespace NewsApp.MVC.Controllers
             var exchangeExpireClaims = new Claim("ExchangeExpireDate", DateTime.Now.AddDays(10).ToString());
             var user = await _userManager.FindByNameAsync(model.Username);
 
-            //var claimResult = await _userManager.AddClaimAsync(user!, exchangeExpireClaims);
-
-            //if (!claimResult.Succeeded)
-            //{
-            //    ModelState.AddModelErrorList(claimResult.Errors.Select(_ => _.Description).ToList());
-            //}
-
             TempData["SuccessMessage"] = "User successfully registered.";
             return RedirectToAction(nameof(HomeController.SignUp));
 
@@ -122,6 +118,12 @@ namespace NewsApp.MVC.Controllers
             if(hasUser == null)
             {
                 ModelState.AddModelError(string.Empty, "Email ya da þifre yanlýþ.");
+                return View();
+            }
+
+            if(hasUser.IsDeleted == true)
+            {
+                ModelState.AddModelError(string.Empty, "dailynews@support.com mail adresi ile iletiþime geçiniz.");
                 return View();
             }
 
@@ -180,8 +182,8 @@ namespace NewsApp.MVC.Controllers
         public async Task<IActionResult> CategoryPage(string categoryName)
         {
             ViewBag.Categories = await _categoryService.GetAllCategories();
-
             var result = await _postService.GetPostsByCategory(categoryName);
+
             if (User.Identity.IsAuthenticated)
             {
                 return View(result.Data);

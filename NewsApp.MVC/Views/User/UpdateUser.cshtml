@@ -12,9 +12,7 @@
 @model AppUserViewModel
 
 <div class="row">
-    <div class="col-md-6 offset-md-3">
-        <h4>User Update</h4>
-        <hr />
+    <div class="col-md-8 offset-md-2">
         <div class="alert alert-danger" asp-validation-summary=ModelOnly role="alert">
         </div>
         @if (TempData["SuccessMessage"] != null)
@@ -24,58 +22,72 @@
             </div>
         }
         <form asp-controller="User" asp-action="UpdateUser" method="post" enctype="multipart/form-data">
-            <div class="row mb-3">
-                <label asp-for="Email" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <p>@Model.Email</p>
-                    <span class="text-danger" asp-validation-for="Email"></span>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="">
+                    <h4 class="mt-4">Kullanıcı Bilgileri</h4>
+                    <hr />
+                </div>
+                <div class="d-flex align-items-center justify-content-end">
+                    <button type="submit" class="btn btn-warning">Güncelle</button>
+                </div>
+            </div>
+            <div class="row mb-3 d-flex">
+                <div class="col-md-8 d-flex flex-column">
+                    <div class="row mb-3">
+                        <label asp-for="Email" class="col-md-3 col-form-label fw-bold"></label>
+                        <div class="col-md-8">
+                            <p class="mt-1">@Model.Email</p>
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label asp-for="Name" class="col-md-3 col-form-label fw-bold"></label>
+                        <div class="col-md-8">
+                            <input class="form-control" asp-for="Name" autocomplete="off" value="@Model.Name">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label asp-for="Surname" class="col-md-3 col-form-label fw-bold"></label>
+                        <div class="col-md-8">
+                            <input class="form-control" asp-for="Surname" autocomplete="off" value="@Model.Surname">
+                            <span asp-validation-for="Surname" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <img class="rounded-circle" src="@Model.Image" style="width:100px" />
                 </div>
             </div>
             <div class="row mb-3">
-                <label asp-for="Phone" class="col-md-4 col-form-label"></label>
+                <label asp-for="Phone" class="col-md-2 col-form-label fw-bold"></label>
                 <div class="col-md-8">
                     <input class="form-control" asp-for="Phone" autocomplete="off" value="@Model.Phone">
                     <span asp-validation-for="Phone" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
-                <label asp-for="BirthDate" class="col-md-4 col-form-label"></label>
+                <label asp-for="BirthDate" class="col-md-2 col-form-label fw-bold"></label>
                 <div class="col-md-8">
                     <input class="form-control" asp-for="BirthDate" autocomplete="off" value="@Model.BirthDate">
                     <span asp-validation-for="BirthDate" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
-                <label asp-for="Image" class="col-md-4 col-form-label"></label>
+                <label asp-for="Image" class="col-md-2 col-form-label fw-bold"></label>
                 <div class="col-md-8">
                     <input class="form-control" type="file" asp-for="Image" autocomplete="off" value="@Model.Image">
                     <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
-                <label asp-for="Name" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="Name" autocomplete="off" value="@Model.Name">
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label asp-for="Surname" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="Surname" autocomplete="off" value="@Model.Surname">
-                    <span asp-validation-for="Surname" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label asp-for="HomeLand" class="col-md-4 col-form-label"></label>
+                <label asp-for="HomeLand" class="col-md-2 col-form-label fw-bold"></label>
                 <div class="col-md-8">
                     <input class="form-control" asp-for="HomeLand" autocomplete="off" value="@Model.HomeLand">
                     <span asp-validation-for="HomeLand" class="text-danger"></span>
                 </div>
             </div>
-            <div class="d-flex align-items-center justify-content-end">
-                <button type="submit" class="btn btn-outline-dark">Update</button>
-            </div>
+            <input hidden asp-for="Id" value="@Model.Id" />
         </form>
     </div>
 </div>

@@ -48,13 +48,14 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
             var managEUsers = await _adminService.ManageUsers();
             return View(managEUsers.Data);
         }
-        [HttpGet]
-        public async Task<IActionResult> UpdateUser(string userId)
+        [HttpGet("/user/profile/{userId}")]
+        public async Task<IActionResult> ManageSingleUser(string userId)
         {
-            return View();
+            var result = await _adminService.GetSingleUser(userId);
+            return View(result.Data);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateUser()
+        public async Task<IActionResult> ManageSingleUser()
         {
             return View();
         }
@@ -81,6 +82,36 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
             return RedirectToAction("AssignCategoryToUser","Admin");
         }
 
+        [HttpPost]
+        [Authorize(Roles="admin")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            await _adminService.DeleteUser(id);
+            return RedirectToAction("Index", "Admin");
+        }
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> ReActiveUser(string id)
+        {
+           await _adminService.ReActiveUser(id);
+            return RedirectToAction("Index", "Admin");
+        }
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> RemoveCategory(string categoryId)
+        {
+            await _adminService.RemoveCategory(categoryId);
+            return RedirectToAction("ManageDepartments", "Admin");
+        }
+        [HttpPost]
+        [Authorize(Roles ="admin")]
+        public async Task<IActionResult> ActivateCategory(string categoryId)
+        {
+            await _adminService.ActivateCateory(categoryId);
+            return RedirectToAction("ManageDepartments", "Admin");
+        }
+
+
 
         [Authorize(Roles = "admin")]
         [HttpPost]
@@ -95,16 +126,14 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
             return RedirectToAction("Index", "Admin");
         }
         [HttpGet]
-        public async Task<IActionResult> ManagePosts()
-        {
-            var allPosts =await _postService.GettAllPosts();
-            return View(allPosts.Data);
-        }
-        [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
-            var categories = await _categoryService.GetAllCategories();
-            return View(categories);
+            var result =await _adminService.GetDashboardData();
+            if (result.IsSuccesfull)
+            {
+                return View(result.Data);
+            }
+            return View("Error",result.Errors);
         }
         [HttpGet("admin/managedepartments")]
         public async Task<IActionResult> ManageDepartments()
@@ -113,14 +142,15 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
             var usersRole = await _userManager.GetRolesAsync(currentUser);
             var usersDepartments = await _categoryService.GetUsersCategory(currentUser.Id);
             var categories = await _categoryService.GetAllCategories();
+            var filteredCategories = categories.Data;
             if (usersRole.Contains("director") && !usersRole.Contains("admin"))
             {
-                categories = categories.Where(x => x.Id == usersDepartments.Id).ToList();
+                filteredCategories = filteredCategories.Where(x => x.Id == usersDepartments.Id).ToList();
             }
 
             var pageViewModel = new ManageDepartmentsPageViewModel()
             {
-                CategoryViewModel = categories
+                CategoryViewModel = filteredCategories
             };
             return View(pageViewModel);
         }

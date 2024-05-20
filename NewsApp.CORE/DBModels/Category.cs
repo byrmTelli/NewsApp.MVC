@@ -12,5 +12,6 @@ namespace NewsApp.CORE.DBModels
         public string Name { get; set; }
         public List<Post> Posts { get; set; }
         public List<AppUser> Users { get; set; } = new List<AppUser>();
+        public bool IsDeleted { get; set; } = false;
     }
 }

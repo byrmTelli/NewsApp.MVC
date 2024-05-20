@@ -8,6 +8,8 @@ using NewsApp.CORE.ViewModels.CategoryViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
 using NewsApp.CORE.ViewModels.RoleViewModels;
 using NewsApp.CORE.ViewModels.UserViewModels;
+using NewsApp.DAL.Abstract;
+using NewsApp.DAL.Concrete;
 using NewsApp.DAL.Context;
 using NewsApp.SERVICE.Services.Abstract;
 using SQLitePCL;
@@ -16,6 +18,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,8 +29,10 @@ namespace NewsApp.SERVICE.Services.Concrete
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly AppDbContext _context;
-        public AppUserService(UserManager<AppUser> userManager, AppDbContext context,RoleManager<AppRole> roleManager)
+        private readonly IAppUserDal _userDal;
+        public AppUserService(UserManager<AppUser> userManager, AppDbContext context,RoleManager<AppRole> roleManager, IAppUserDal userDal)
         {
+            _userDal = userDal;
             _userManager = userManager;
             _context = context;
             _roleManager = roleManager;
@@ -121,7 +126,7 @@ namespace NewsApp.SERVICE.Services.Concrete
                 return Response<NoDataViewModel>.Fail("There is user matched given id", 404, true);
             }
 
-            if(request.Image != null || request.Image.Length != 0)
+            if(request.Image != null)
             {
                 byte[] pictureBytes;
                 using (var memoryStream = new MemoryStream()) 
@@ -208,6 +213,18 @@ namespace NewsApp.SERVICE.Services.Concrete
                 Image = _.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(_.Image),
             }).ToList();
             return Response<List<AppUserViewModel>>.Success(departmentAuthors, 200);
+        }
+
+        public async Task<Response<List<AppUserViewModel>>> GetAllUsersWithLinq()
+        {
+            try
+            {
+                var result = await _userDal.GetAllUsersWithCategoryAndRole();
+                return Response<List<AppUserViewModel>>.Success(result, 200);
+            }catch(Exception ex)
+            {
+                return Response<List<AppUserViewModel>>.Fail("Bir hata ile karşılaşıldı. Hata: " + ex, 500, true);
+            }
         }
     }
 }

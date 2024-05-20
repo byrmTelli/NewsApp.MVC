@@ -10,5 +10,6 @@ namespace NewsApp.CORE.ViewModels.CategoryViewModels
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

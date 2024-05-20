@@ -16,7 +16,7 @@ namespace NewsApp.MVC.Seeds
             var context = scope.ServiceProvider.GetService<AppDbContext>();
             var userManager = scope.ServiceProvider.GetService<UserManager<AppUser>>();
             var roleManager = scope.ServiceProvider.GetService<RoleManager<AppRole>>();
-            
+
             context.Database.Migrate();
 
 
@@ -27,11 +27,11 @@ namespace NewsApp.MVC.Seeds
 
             if (context.Users.Count() == 0)
             {
-                await userManager.CreateAsync(new AppUser() { UserName = "admin",Name="Karen",Surname ="Perkson", Email = "adminuser@test.com", CreatedDate = DateTime.Now ,IsSubscriber=true}, "Password123.");
-                await userManager.CreateAsync(new AppUser() { UserName = "director1", Name="Jim",Surname="Luther", Email = "director1@test.com", CreatedDate = DateTime.Now, IsSubscriber = true }, "Password123.");
-                await userManager.CreateAsync(new AppUser() { UserName = "director2", Name = "Kaycee",Surname="Kerb", Email = "director2@test.com", CreatedDate = DateTime.Now , IsSubscriber = true }, "Password123.");
-                await userManager.CreateAsync(new AppUser() { UserName = "writer1",Name="Anna",Surname="Druawehks", Email = "writer1@test.com", CreatedDate = DateTime.Now, IsSubscriber= true }, "Password123.");
-                await userManager.CreateAsync(new AppUser() { UserName = "writer2",Name="Bayram",Surname="Telli", Email = "writer2@test.com", CreatedDate = DateTime.Now , IsSubscriber =true}, "Password123.");
+                await userManager.CreateAsync(new AppUser() { UserName = "admin", Name = "Karen", Surname = "Perkson", Email = "adminuser@test.com", CreatedDate = DateTime.Now, IsSubscriber = true }, "Password123.");
+                await userManager.CreateAsync(new AppUser() { UserName = "director1", Name = "Jim", Surname = "Luther", Email = "director1@test.com", CreatedDate = DateTime.Now, IsSubscriber = true }, "Password123.");
+                await userManager.CreateAsync(new AppUser() { UserName = "director2", Name = "Kaycee", Surname = "Kerb", Email = "director2@test.com", CreatedDate = DateTime.Now, IsSubscriber = true }, "Password123.");
+                await userManager.CreateAsync(new AppUser() { UserName = "writer1", Name = "Anna", Surname = "Druawehks", Email = "writer1@test.com", CreatedDate = DateTime.Now, IsSubscriber = true }, "Password123.");
+                await userManager.CreateAsync(new AppUser() { UserName = "writer2", Name = "Bayram", Surname = "Telli", Email = "writer2@test.com", CreatedDate = DateTime.Now, IsSubscriber = true }, "Password123.");
                 await userManager.CreateAsync(new AppUser() { UserName = "writer3", Name = "Emre", Surname = "Tütün", Email = "writer3@test.com", CreatedDate = DateTime.Now, IsSubscriber = true }, "Password123.");
             }
             var admin = await userManager.FindByEmailAsync("adminuser@test.com");
@@ -74,7 +74,7 @@ namespace NewsApp.MVC.Seeds
             var technologyCategory = await context.Categories.Where(x => x.Name == "Technology").FirstOrDefaultAsync();
 
             var userCategories = await context.UserCategories.ToListAsync();
-            if(userCategories.Count == 0)
+            if (userCategories.Count == 0)
             {
                 await context.UserCategories.AddAsync(new AppUserCategory() { UserId = director1.Id, CategoryId = sportsCategory!.Id });
                 await context.UserCategories.AddAsync(new AppUserCategory() { UserId = director2.Id, CategoryId = politicsCategory!.Id });
@@ -95,7 +95,7 @@ namespace NewsApp.MVC.Seeds
                             Content = "On a night when all eyes were on the Champions League, the Premier League witnessed its biggest comeback win in more than 20 years.\r\n\r\nAway from the television cameras and the drama in Madrid and Dortmund, Bournemouth and Luton played out one of the most extraordinary Premier League matches of this or any recent season.\r\n\r\nBournemouth won 4-3, having been three goals down at the break.\r\n\r\nDominic Solanke's exquisite turn and finish started the comeback five minutes after half-time, and after Illia Zabarnyi bundled in a header for 2-3, Antoine Semenyo completed the comeback with a pair of powerful finishes - the second with only six minutes remaining.\r\n\r\n\"It's unreal,\" Semenyo told BBC Match of the Day. \"It is an achievement of mine just playing in the Premier League so to get a winning goal for the team, I'm buzzing.\"\r\n\r\nIt meant Bournemouth became only the fifth team in Premier League history to win a match in which they trailed by three goals, and just the third to do so in a game where they were 3-0 down at half-time.\r\n\r\nThe others to achieve this feat were Manchester United in beating Spurs 5-3 in September 2001 and Wolves v Leicester in October 2003.\r\n\r\nAccording to Semenyo, there was no half-time tirade from Bournemouth manager Andoni Iraola at half-time. In fact he seemed to say very little to his team, as the Cherries were out for the second half early - so early in fact that it caught the forward off guard.\r\n\r\n\"I was on the bike actually when everyone was running out so I had to scurry out quickly. It was because we were ready to go and put a performance on for the fans and for ourselves.\"",
                             CreatedAt = DateTime.Now,
                             Image = "https://ichef.bbci.co.uk/onesport/cps/976/cpsprodpb/FBEA/production/_132909446_gettyimages-2081879652.jpg",
-                            Creator = users.Where(x => x.Name =="Emre").FirstOrDefault(),
+                            Creator = writer1,
                             Category =  categories.Where(x => x.Name == "Sports").FirstOrDefault(),
                             IsPrivateOnly = true,
                             IsPublished = true,
@@ -115,7 +115,7 @@ namespace NewsApp.MVC.Seeds
                             Content = "Borussia Dortmund reached the Champions League quarter-finals for the first time in three years thanks to goals from Jadon Sancho and Marco Reus against PSV Eindhoven.Sancho's low driving shot from the edge of the area gave Dortmund the lead in the third minute.\r\n\r\nEdin Terzic's side had a second goal ruled out as Niclas Fullkrug was deemed to be offside in the build-up.\r\n\r\nSubstitute Reus pounced on a PSV mistake deep in stoppage time to finish one-on-one against away goalkeeper Walter Benitez and settled the tie.\r\n\r\n'No magic moments' - has Champions League become boring?\r\nChampions League draw to take place on Friday\r\nPSV had numerous opportunities to equalise, with Hirving Lozano particularly wasteful, and Peter Bosz's side - who are 10 points clear at the top of the Eredivisie - were punished for their squandering.\r\n\r\nLozano, brought on as a second-half substitute, slashed wide from close range, shot straight at home goalkeeper Gregor Kobel and also missed the target from the edge of the area.\r\n\r\nThe best chance for PSV came a minute before Dortmund's late second goal.\r\n\r\nLuuk de Jong got on the end of a one-two but he leaned back and fired over from close range as PSV's time in the Champions League came to a frustrating end.\r\n\r\nThe home side could have been ahead even earlier in the contest when Chelsea loanee Ian Maatsen's fierce strike was tipped over by Benitez, before Sancho set the tone soon after and his substitute Reus secured Dortmund's place in the last eight with his late finish.",
                             CreatedAt = DateTime.Now,
                             Image = "https://ichef.bbci.co.uk/onesport/cps/976/cpsprodpb/4254/production/_132908961_gettyimages-2081965236.jpg",
-                            Creator = users.Where(x => x.Email == "writer1@test.com").FirstOrDefault(),
+                            Creator = writer1,
                             Category =  categories.Where(x => x.Name == "Sports").FirstOrDefault(),
                             IsPrivateOnly = false,
                             IsPublished = true,
@@ -167,7 +167,7 @@ namespace NewsApp.MVC.Seeds
                             Content = "The Budget will contain an £800m package of technology reforms aimed at freeing up NHS and police time, the Treasury has announced.\r\n\r\nChancellor Jeremy Hunt said ahead of the 6 March announcement that there was \"too much waste in the system\".\r\n\r\nAs part of the reforms, AI will be used to cut NHS scan times by a third and the police will deploy drones to incidents such as traffic collisions.\r\n\r\nLabour said the package amounted to \"spin without substance\".\r\n\r\nElsewhere, Mr Hunt also hinted that civil service staff numbers could be cuts by tens of thousands.",
                             CreatedAt = DateTime.Now,
                             Image = "https://ichef.bbci.co.uk/news/1024/cpsprodpb/4677/production/_132793081_93e8b0396b7b29788b4ae34c5c192039eef7fd3e-1.jpg.webp",
-                            Creator = writer2,
+                            Creator = writer3,
                             Category =  categories.Where(x => x.Name == "Technology").FirstOrDefault(),
                             IsPrivateOnly = false,
                             IsPublished = true,
@@ -201,7 +201,112 @@ namespace NewsApp.MVC.Seeds
                             Category =  categories.Where(x => x.Name == "Technology").FirstOrDefault(),
                             IsPrivateOnly = false,
                             IsPublished = true,
-                        }
+                        },
+                        //Businness
+                        new Post(){
+                            Title ="Boeing boss's $33m pay package approved",
+                            Content = "Boeing shareholders have signed off on the plane-maker's plan to grant outgoing boss Dave Calhoun a 2023 pay package worth nearly $33m (£25m).\r\n\r\nA majority voted in favour of the plan, which had drawn criticism as the company grapples with a crisis sparked by the mid-air blowout of a panel on one of its planes in January.\r\n\r\nSuch pay votes, held at the company's annual meetings, are not binding.\r\n\r\nA breakdown of the vote was not immediately available.\r\n\r\nAhead of the meeting, at least one prominent shareholder advisory group had criticised the plan and it also drew attention from some investors who spoke at the event.\r\n\r\nThe firm's decision to keep outgoing boss Dave Calhoun on the company's board of directors had raised questions as well, but was also approved.\r\n\r\nMr Calhoun's compensation package included salary of $1.4m (£1.1m) and stock awards worth about $30m (£23m) when granted.\r\n\r\nThat compared to a package of roughly $22.6m (£17m) in 2022.\r\n\r\nIn a question-and answer session after the vote, the firm was asked how the compensation for Mr Calhoun and others were \"justified\" given the severe challenges now facing the company.\r\n\r\nNew board chairman Steve Mollenkopf said the board had reduced some 2024 awards for executives after the accident and moved swiftly to overhaul the design of its pay incentives.\r\n\r\nThat included giving product safety the primary weight in determining performance, instead of financial factors - such as cash flow and share price - as had been the case previously, he said.\r\n\r\nBut both he and Mr Calhoun acknowledged the strains facing the company, some of which Mr Calhoun described as \"potentially existential\" in nature.\r\n\r\nThe Alaska Airlines incident revived questions about the firm's manufacturing and safety procedures and has spawned numerous investigations and lawsuits.\r\n\r\nJust days ago, the US Department of Justice (DOJ) said it was considering whether to prosecute Boeing over deadly crashes involving its 737 Max aircraft in 2018 and 2019, after determining it had breached a deal that shielded it from criminal charges.\r\n\r\nIn March, Boeing said Mr Calhoun would step down by the end of the year.\r\n\r\nThe search for his replacement is a key focus of the company now, Mr Mollenkopf said.\r\n\r\n\"The months and years ahead are critically important for our company as we take the necessary steps to regain the trust lost in recent times,\" he said.\r\n\r\nIn putting the pay package to shareholders earlier this year, the company praised how Mr Calhoun had steered the company through challenges such as Covid since 2020.\r\n\r\nIt said he had responded to the Alaska Airlines blowout \"in the right way\".\r\n\r\n\"The 737 MAX accidents and COVID have combined to create tremendous stress on the Company’s manufacturing operations and supply chain,\" it said.\r\n\r\n\"However, the Board believes that Mr. Calhoun’s primary focus on safety, quality and transparency is exactly what Boeing has needed, and continues to need.\"",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/news/1024/cpsprodpb/74fe/live/67c9f780-1460-11ef-a5f9-c9e97f2e93cf.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Business").FirstOrDefault(),
+                            IsPrivateOnly = true,
+                            IsPublished = true,
+                        },
+                        new Post(){
+                            Title ="Cuba laments collapse of iconic sugar industry",
+                            Content="The men of the Yumuri sugar co-operative in Cuba have worked the cane fields around the city of Cienfuegos since they were old enough to wield a machete.\r\n\r\nCutting cane is all Miguel Guzmán has ever known. He comes from a family of farm hands and started the tough, thankless work as a teenager.\r\n\r\nFor hundreds of years, sugar was the mainstay of the Cuban economy. It was not just the island's main export but also the cornerstone of another national industry, rum.\r\n\r\nOlder Cubans remember when the island was essentially built on the backs of families like Mr Guzmán's.\r\n\r\nToday, though, he readily admits he has never seen the sugar industry as broken and depressed as it is now - not even when the Soviet Union's lucrative sugar quotas dried up after the Cold War.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/news/1024/cpsprodpb/3A6B/production/_133255941_peloton.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Business").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+                        //Culture
+                        new Post(){
+                            Title ="Sean 'Diddy' Combs: Video appears to show rap mogul beating girlfriend Cassie in 2016",
+                            Content="CCTV has emerged appearing to show rap mogul Sean \"Diddy\" Combs attacking singer Casandra \"Cassie\" Ventura in a hotel hallway in 2016.\r\n\r\nThe video, aired by CNN, has surfaced in the wake of allegations by Ms Ventura about her ex-boyfriend and producer in a lawsuit last year.\r\n\r\nShe has not commented, but her lawyer said it confirms \"the disturbing and predatory behaviour of Mr Combs\".\r\n\r\nA lawyer for Mr Combs has not responded to a BBC request for comment.\r\n\r\nThe BBC has not independently verified the video, which appears to be a compilation of surveillance footage angles dated 5 March 2016.\r\n\r\n\r\nAccording to CNN, it was filmed at the now-closed InterContinental Hotel in Century City, Los Angeles.\r\n\r\nThe clip appears to show Ms Ventura leaving a hotel room to walk towards a row of elevators.\r\n\r\nA shirtless man is seen holding a towel around his waist, and hurrying down a hallway.\r\n\r\nCassie settles legal case accusing Diddy of rape\r\nWhat we know about the accusations against Diddy\r\nWhen he catches up to her, he grabs her and throws her on the floor, causing her to drop some luggage.\r\n\r\n\r\nHe kicks her while she is on the ground, before picking up her bags and kicking her a second time then attempting to drag her by her shirt.\r\n\r\nThe attacker is seen leaving for a moment, before returning and shoving Ms Ventura as she stands up. He then sits in a chair near the lifts and throws an object.\r\n\r\nA lawyer for R&B singer Ms Ventura, Douglas Wigdor, said in a statement: \"The gut-wrenching video has only further confirmed the disturbing and predatory behaviour of Mr Combs.\r\n\r\n\"Words cannot express the courage and fortitude that Ms Ventura has shown in coming forward to bring this to light.\"\r\n\r\nThe Los Angeles District Attorney's Office said on Friday that the assault captured in the video might be too old to prosecute.\r\n\r\n\r\n\"We find the images extremely disturbing and difficult to watch,\" it said in a statement.\r\n\r\n\"If the conduct depicted occurred in 2016, unfortunately we would be unable to charge as the conduct would have occurred beyond the timeline where a crime of assault can be prosecuted.\"\r\n\r\nIn a now-settled federal lawsuit last year, Ms Ventura alleged that \"around March 2016\" Mr Combs \"became extremely intoxicated and punched Ms Ventura in the face, giving her a black eye\".\r\n\r\n\"After he fell asleep, Ms Ventura tried to leave the hotel room, but as she exited, Mr Combs awoke and began screaming at Ms Ventura.\r\n\r\n\"He followed her into the hallway of the hotel while yelling at her. He grabbed at her, and then took glass vases in the hallway and threw them at her, causing glass to crash around them as she ran to the elevator to escape,\" the documents said.\r\n\r\n\r\nThe lawsuit alleged that the rap mogul had purchased the footage from the hotel for $50,000 (£39,000).\r\n\r\nHer legal action against Mr Combs, which accused him of rape and sexual trafficking over a decade, was settled for an undisclosed sum one day after it was filed in November last year.\r\n\r\nMr Combs' lawyer, Benjamin Brafman, said at the time that the settlement \"is in no way an admission of wrongdoing\".\r\n\r\n\"Mr Combs' decision to settle the lawsuit does not in any way undermine his flat-out denial of the claims. He is happy they got to a mutual settlement and wishes Ms Ventura the best.\"\r\n\r\nSince then, several other women have filed lawsuits accusing the rapper of sexual misconduct.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/news/1024/cpsprodpb/176BC/production/_133323959_gettyimages-514346660.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Culture").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+                        new Post(){
+                            Title ="Hit Me Hard And Soft: What makes Billie Eilish's records 'eco-friendly'?",
+                            Content="Each year, the UK's vinyl habit is estimated to produce the same amount of emissions as 400 people.\r\n\r\nBut Billie Eilish is hoping to change the record with her new album Hit Me Hard and Soft, which came out on Friday.\r\n\r\nAlbums will be pressed on to recycled or eco-vinyl and the packaging will also be made from recycled materials.\r\n\r\nThere's scepticism about how much difference that can really make when it's linked to a huge world tour.\r\n\r\nBut Billie is keen not to be the Bad Guy, and has also been praised for drawing attention to sustainability in the music industry.\r\n\r\n\r\nIn an interview last month, the singer told Billboard she and her team were doing everything they could to minimise waste \"in every aspect\" of her music.\r\n\r\n\"My parents have always kept me well informed and hyper-aware that every choice we make and every action we take has an impact somewhere or on someone, good or bad, and that has always stuck with me,\" she said.\r\n\r\nAt a record press in South Wigston, Leicestershire, BBC Newsbeat was offered a behind-the-scenes glimpse of the process of making records more sustainable.\r\n\r\n\"Factories are so different to when I first started,\" says Karen Emanuel, CEO of vinyl manufacturers Key Production.\r\n\r\nMost important are the ingredients. Records are made from PVC, a type of plastic which takes centuries to decompose.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/news/1024/cpsprodpb/128F5/production/_133312067_gettyimages-2066804427.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Culture").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+                        //Magazine
+                        new Post(){
+                            Title ="Who won the Kendrick Lamar v Drake beef?",
+                            Content="\"Tryna strike a chord and it's probably A-minor.\"\r\n\r\nWith every second Kendrick Lamar holds on to the last letter of \"minor\" in Not Like Us, the inflammatory song about his fellow rapper Drake, his raspy vocals reverberate through hip-hop and popular culture.\r\n\r\nIt's an explosive allegation, made without evidence, that calls into question Drake's conduct with young women - an allegation now heard around the world. Drake, one of the world's biggest artists, vehemently denies it.\r\n\r\n Since its release on 4 May, Not Like Us has been dissected on social media, played at NBA basketball games and boomed from DJ booths at parties from London to Los Angeles; New York to Atlanta, piercing the public consciousness. \r\n\r\nAnd it is only one of nine songs that make up a mind-boggling, escalating conflict between two modern rap titans, involving unevidenced accusations of domestic violence, secret children and paedophilia - all denied.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/news/1024/cpsprodpb/16237/production/_133297609_1_comp_drake_kendrick_lamar_getty.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Magazine").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+                         new Post(){
+                            Title ="My fake food was good enough for Barbie",
+                            Content="An artist who creates fake food has been left \"stunned\" by the response since her work featured in the hit Barbie film last year.\r\n\r\nKerry Samantha Boyes saw her \"raspberry ripple ice creams\" take a staring role in the opening beach scenes of the Hollywood hit.\r\n\r\nShe makes high-quality and realistic sculptures of food for a range of uses from historic houses and museums to films and TV shows.\r\n\r\nSince launching her Fake Food Workshop business six years ago as a kitchen table start-up, it has grown rapidly.\r\n\r\nThe mother-of-three now has her own fake food store and studio set-up in south-west Scotland with an ever-growing list of illustrious clients all around the world.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/news/1024/cpsprodpb/7c8b/live/9dd8c890-06fc-11ef-bb9e-7d83bdea22d0.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Magazine").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+                         //Travel
+                         new Post(){
+                            Title ="Seven new Bridgerton filming locations you can visit",
+                            Content="Bridgerton is back, and from London palaces to Bath ballrooms, here are some of the best places to experience Regency-era England.\r\n\r\nThe 16 May release of season three of Netflix's mega hit Bridgerton has inspired fans to do more than just watch the show's Regency-era high society seduction and scandal unfold. Fans of the series are increasingly booking trips to some the show's iconic filming locations, with the British rail- and bus-booking platform Trainline reporting that trips to Bridgerton-based destinations across England increasing by an average of 50% in the last year, and 135% year over year among American travellers.\r\n\r\nAccording to VisitBritain CEO Patricia Yates, Bridgerton's newest season presents an opportunity to \"promote [Britain's] world-renowned history and heritage and associated experiences to a global audience, inspiring visitors to come and see the filming locations and destinations for themselves.\"\r\n\r\nFrom London palaces to Bath ballrooms, here are seven places around England where fans can experience Bridgerton's lavish drama for themselves.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/images/ic/1024xn/p0hyrhq8.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Travel").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+                        new Post(){
+                            Title ="Tijuca National Park: The fight to rewild the world's largest urban forest",
+                            Content="After the forest was decimated by colonial plantations, an ambitious rewilding programme is now aiming to ensure the survival of Rio de Janeiro's ancient rainforest.\r\n\r\nOne minute I'm choked by fumes under a concrete overpass. Minutes later, I'm soaked in sweat, sticky with the respiration of a forest. Now, that's not something you feel in every city – especially one with more than six million inhabitants.\r\n\r\nRio de Janeiro might be known for its beaches, football and Carnival, but few realise that it contains the world's largest urban forest: the Tijuca forest.\r\n\r\nTijuca is no typical forest. First protected in 1861 – a decade before the first national park in the United States – Tijuca forest is a 40 sq km chunk of Atlantic Forest, a once-vast biome that covered 1,000,000 sq km of Brazilian coastline. Today, roughly 15% of the Atlantic Forest remains, decimated by sugarcane and coffee plantations as well as logging by the European colonists that first stepped on Brazil's shores in the 16th Century.\r\n\r\nIn Rio de Janeiro, the loss of Atlantic Forest over the next 200 years was nearly a death knell for the young settlement. Rivers that quenched the city dried up and drought was imminent. Nineteenth-century Emperor Peter II had a solution: bring back the forest. So in the 1860s, farmers and city dwellers living on forest land were expropriated and enslaved Africans were ordered to plant more than 100,000 trees. However, they didn't bring back many of the animal species that once thrived in the forest.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/images/ic/1024xn/p0hy8h7g.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Travel").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+                        new Post(){
+                            Title ="Estonia's naked wellness tradition to cleanse both body and soul",
+                            Content="Used for centuries by rural Estonians to heal their aches and pains, smoke saunas are a soulful experience that clears the mind and cleanses the spirit.\r\n\r\nIt's an uncommonly sunny March afternoon in Estonia but I'm in the dark cocoon of a smoke sauna, lying on a bench, completely naked. My feet are propped up on a sooty wooden beam and my head rests on a viht. This small bundle of thin oak branches is meant for lashing my bare body to slough off dead skin cells and boost circulation, but for the moment, it's a pillow. The dried leaves are pliant, though, after being soaked in water. Their earthy smell and the tang of smoke fill my nostrils. The air is damp, and beads of sweat cover my body.\r\n\r\nEda Veeroja, the owner of Mooska Smoke Sauna, is also naked. She drizzles water onto hot rocks piled on top of the brick stove. \"Olen tuul üle väljade… Sind hoian, hoian endas [I am the wind across the fields… I hold you, I hold you]\" she sings, the tune like a lullaby, the words hanging in the air like leil, the steam rising off the rocks.\r\n\r\nMooska is located in the south-eastern corner of Estonia, about 20km from the Russian border as the crow flies. It is part of Vana Võromaa, or Old Võromaa, which encompasses present-day Võru and Polva counties plus parts of Tartu and Valga counties. This remote region of rolling hills is the ancestral home of Võro, a Finno-Ugric language similar to Estonian with approximately 70,000 native speakers.\r\n\r\nVeeroja has spent the past eight hours preparing the sauna. During the six-hour heating process, she fed logs to the stove inside the steam room. As a smoke sauna has no chimney, the steam room filled with smoke, the hot air rising to the ceiling, leaving just enough clear air below to allow her to continue stoking the fire. Once the interior temperature climbed over 80C, she opened a small hatch in the ceiling, ventilating the sauna for two hours before we went in.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/images/ic/1024xn/p0hxwz5m.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Travel").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+                        new Post(){
+                            Title ="Tawaraya: Sleep like a shōgun-era samurai at Kyoto's finest ryokan",
+                            Content="Run by the same family for the past 12 generations, this more-than-300-year-old inn is considered one of the finest in all of Japan.\r\n\r\nEvery Monday night for the past 10 weeks, I have been glued to my couch, drinking in every moment of the critically acclaimed samurai series Shōgun. \r\n\r\nThe show, based on James Clavell's 1975 bestselling novel about Japan's violent feudal past, details the tug-of-war between rival lords vying to be the shōgun, (supreme military ruler) of Japan in the years just before the Tokugawa shogunate (1603-1868). The limited series drew more than nine million viewers across its various streaming platforms in its first few weeks, making it one of the most-watched show of 2024 so far. \r\n\r\nAs I watched scenes of the translator Toda Mariko and English sailor John Blackthorne seated on tatami mats framed by shoji screens, peering out of their wood-panelled rooms towards a private garden, I was transported to my own travels in Japan – particularly my experience staying at Tawaraya. Considered the finest ryokan (traditional Japanese inn) in Kyoto – and one of the finest in Japan – Tawaraya opened in 1709 during the heart of the Tokugawa shogunate and once hosted the types of people the show depicts: samurai, daimyō feudal lords and members of the Tokugawa clan itself. Today, the inn has been operated by the same family for 12 generations spanning more than 300 years.",
+                            CreatedAt = DateTime.Now,
+                            Image = "https://ichef.bbci.co.uk/images/ic/1024xn/p0hxwz5m.jpg.webp",
+                            Creator = admin,
+                            Category =  categories.Where(x => x.Name == "Travel").FirstOrDefault(),
+                            IsPrivateOnly = false,
+                            IsPublished = true,
+                        },
+
                     }
                     );
             }

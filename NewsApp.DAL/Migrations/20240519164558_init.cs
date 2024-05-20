@@ -30,7 +30,8 @@ namespace NewsApp.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,6 +85,7 @@ namespace NewsApp.DAL.Migrations
                     Image = table.Column<byte[]>(type: "BLOB", nullable: true),
                     IsSubscriber = table.Column<bool>(type: "INTEGER", nullable: false),
                     UserCategoryId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -230,7 +232,8 @@ namespace NewsApp.DAL.Migrations
                     CategoryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Image = table.Column<string>(type: "TEXT", nullable: false),
                     IsPrivateOnly = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsPublished = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsPublished = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
