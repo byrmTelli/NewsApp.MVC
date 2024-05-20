@@ -135,19 +135,21 @@ namespace NewsApp.MVC.Controllers
             }
 
             var signInResult = await _signInManager.PasswordSignInAsync(hasUser, model.Password, model.RememberMe, true);
+            if(signInResult.Succeeded)
+            {
+
+                return Redirect(returnUrl!);
+            }
+
             if (signInResult.IsLockedOut)
             {
                 ModelState.AddModelErrorList(new List<string>() { "Hesabýnýz 3 dakika askýya alýndý." });
                 return View();
             }
 
-            if (!signInResult.Succeeded)
-            {
-                ModelState.AddModelErrorList(new List<string>() { $"Email ya da þifre yanlýþ. Baþarýsýz giriþ sayýsý{await _userManager.GetAccessFailedCountAsync(hasUser)}" });
-            }
 
-            return Redirect(returnUrl!);
-
+            ModelState.AddModelErrorList(new List<string>() { $"Email ya da þifre yanlýþ. Baþarýsýz giriþ sayýsý: {await _userManager.GetAccessFailedCountAsync(hasUser)}" });
+            return View();
         }
 
 
