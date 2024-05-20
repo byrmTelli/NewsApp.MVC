@@ -2,10 +2,12 @@
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.Generics;
 using NewsApp.CORE.RequestModels.NewsRequestModels;
+using NewsApp.CORE.ViewModels.AdminPageViewModels;
 using NewsApp.CORE.ViewModels.CategoryViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
 using NewsApp.CORE.ViewModels.PostViewModels;
 using NewsApp.CORE.ViewModels.UserViewModels;
+using NewsApp.DAL.Abstract;
 using NewsApp.DAL.Context;
 using NewsApp.SERVICE.Services.Abstract;
 using System;
@@ -19,10 +21,12 @@ namespace NewsApp.SERVICE.Services.Concrete
     public class PostService:IPostService
     {
         private readonly AppDbContext _context;
+        private readonly IPostDal _postDal;
 
-        public PostService(AppDbContext context)
+        public PostService(AppDbContext context,IPostDal postDal)
         {
             _context = context;
+            _postDal = postDal;
         }
 
         
@@ -40,26 +44,9 @@ namespace NewsApp.SERVICE.Services.Concrete
             return Response<NoDataViewModel>.Success(204);
 
         }
-
         public async Task<Response<List<PostViewModel>>> GettAllPosts()
         {
-            var allNews = await _context.Posts.Where(x => x.IsPublished == true ).Select(x => new PostViewModel()
-            {
-                Id = x.Id.ToString(),
-                Category = new CategoryViewModel() { Name = x.Category.Name },
-                Creator = new AppUserViewModel()
-                {
-                    Id = x.Creator.Id.ToString(),
-                    Name = x.Creator.Name,
-                    Surname = x.Creator.Surname,
-                },
-                IsSubscriberOnly = x.IsPrivateOnly,
-                Title = x.Title,
-                CreatedAt = x.CreatedAt,
-                Image = x.Image
-
-
-            }).ToListAsync();
+            var allNews =await _postDal.GetAllActivePosts();
 
             return Response<List<PostViewModel>>.Success(allNews,200);
         }
@@ -110,25 +97,12 @@ namespace NewsApp.SERVICE.Services.Concrete
             return Response<NoDataViewModel>.Success(204);
         }
 
-        public async Task<Response<List<PostViewModel>>> GetAllPostsOfUser(string userId)
+        public async Task<Response<ManageSingleUserViewModel>> GetAllPostsOfUser(string userId)
         {
-            var userPosts = await _context.Posts.Where(_ => _.CreatorId == userId).Select(_ => new PostViewModel()
-            {
-                Id = _.Id.ToString(),
-                Category = new CategoryViewModel() { Name = _.Category.Name },
-                Creator = new AppUserViewModel()
-                {
-                    Id = _.Creator.Id.ToString(),
-                    Name = _.Creator.Name,
-                    Surname = _.Creator.Surname,
-                },
-                IsSubscriberOnly = _.IsPrivateOnly,
-                Title = _.Title,
-                CreatedAt = _.CreatedAt,
-                Image = _.Image
-            }).ToListAsync();
+            var userPosts = await _postDal.GetAllPostsOfUser(userId);
 
-            return Response<List<PostViewModel>>.Success(userPosts, 200);
+
+            return userPosts;
         }
 
         public async Task<Response<List<PostViewModel>>> FilterPost(Func<PostViewModel, bool> exp)
@@ -138,22 +112,7 @@ namespace NewsApp.SERVICE.Services.Concrete
 
         public async Task<Response<List<PostViewModel>>> GetPostsByCategory(string categoryName)
         {
-            var posts = await  _context.Posts.Where(_ => _.Category.Name.ToString().ToLower() == categoryName.ToLower()).Where(x => x.IsPublished == true).Select(_ => new PostViewModel()
-            {
-                Id = _.Id.ToString(),
-                Category = new CategoryViewModel() { Name = _.Category.Name },
-                Creator = new AppUserViewModel()
-                {
-                    Id = _.Creator.Id.ToString(),
-                    Name = _.Creator.Name,
-                    Surname = _.Creator.Surname,
-                },
-                IsSubscriberOnly = _.IsPrivateOnly,
-                Title = _.Title,
-                CreatedAt = _.CreatedAt,
-                Content = _.Content,
-                Image = _.Image
-            }).ToListAsync();
+            var posts = await  _postDal.GetPostsByCategory(categoryName);
 
             if (posts == null)
             {
@@ -165,22 +124,7 @@ namespace NewsApp.SERVICE.Services.Concrete
 
         public async Task<Response<List<PostViewModel>>> GetUnPublishedPostsByCategory(string categoryName)
         {
-            var posts = await _context.Posts.Where(_ => _.Category.Name.ToString().ToLower() == categoryName.ToLower()).Where(_ => _.IsPublished == false).Select(_ => new PostViewModel()
-            {
-                Id = _.Id.ToString(),
-                Category = new CategoryViewModel() { Name = _.Category.Name },
-                Creator = new AppUserViewModel()
-                {
-                    Id = _.Creator.Id.ToString(),
-                    Name = _.Creator.Name,
-                    Surname = _.Creator.Surname,
-                },
-                IsSubscriberOnly = _.IsPrivateOnly,
-                Title = _.Title,
-                CreatedAt = _.CreatedAt,
-                Content = _.Content,
-                Image = _.Image
-            }).ToListAsync();
+            var posts =await _postDal.GetUnPublishedPostsByCategory(categoryName);
 
             if (posts == null)
             {

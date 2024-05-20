@@ -11,6 +11,10 @@ namespace NewsApp.DAL.Context
 {
     public class AppDbContext:IdentityDbContext<AppUser,AppRole,string>
     {
+        public AppDbContext()
+        {
+            
+        }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         #region DbSets
@@ -19,6 +23,8 @@ namespace NewsApp.DAL.Context
         public DbSet<AppUserCategory> UserCategories { get; set; }
         #endregion
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+             => optionsBuilder.UseSqlite("Data Source=DailyNewsDB.db;");
 
         //DB Relations
         protected override void OnModelCreating(ModelBuilder modelBuilder)

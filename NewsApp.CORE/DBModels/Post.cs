@@ -17,7 +17,13 @@ namespace NewsApp.CORE.DBModels
         public Guid CategoryId { get; set; }
         public Category? Category { get; set; }
         public string Image { get; set; }
-        public bool IsPrivateOnly { get; set; }
-        public bool IsPublished { get; set; }
+        public bool IsPrivateOnly { get; set; } = false;
+        public bool IsPublished { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
+
+        public Post()
+        {
+            
+        }
     }
 }

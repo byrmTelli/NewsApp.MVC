@@ -1,0 +1,30 @@
+﻿@{
+
+    foreach (var user in @Model)
+    {
+        <div class="row">
+            <ul>
+                <li>Username: @user.Name</li>
+                <li>
+                    Roles:
+                    @foreach (var role in user.Roles)
+                    {
+                        <span>@role</span>
+                    }
+                </li>
+                <li>
+                    @if (user.UserCategory == null)
+                    {
+                        <span>Kategori Yok</span>
+                    }
+                    else
+                    {
+                        @user.UserCategory.Name
+                    }
+                </li>
+            </ul>
+        </div>
+    }
+}
+
+

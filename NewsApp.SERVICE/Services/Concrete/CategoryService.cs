@@ -5,6 +5,7 @@ using NewsApp.CORE.Generics;
 using NewsApp.CORE.RequestModels.CategoyRequestModels;
 using NewsApp.CORE.ViewModels.CategoryViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
+using NewsApp.DAL.Abstract;
 using NewsApp.DAL.Context;
 using NewsApp.SERVICE.Services.Abstract;
 using System;
@@ -19,10 +20,16 @@ namespace NewsApp.SERVICE.Services.Concrete
     {
         private readonly AppDbContext _appDbContext;
         private readonly UserManager<AppUser> _userManager;
-        public CategoryService(AppDbContext appDbContext,UserManager<AppUser> userManager)
+        private readonly ICategoryDal _categoryDal;
+        public CategoryService(
+            AppDbContext appDbContext,
+            UserManager<AppUser> userManager,
+            ICategoryDal categoryDal
+            )
         {
             _appDbContext = appDbContext;
             _userManager = userManager;
+            _categoryDal = categoryDal;
         }
 
         public async Task<Response<NoDataViewModel>> CreateCategory(CategoryRequestModel request)
@@ -45,15 +52,9 @@ namespace NewsApp.SERVICE.Services.Concrete
             return Response<NoDataViewModel>.Success(201);
         }
 
-        public async Task<List<CategoryViewModel>> GetAllCategories()
+        public async Task<Response<List<CategoryViewModel>>> GetAllCategories()
         {
-            var allCategories = await _appDbContext.Categories
-                .Select(_ => new CategoryViewModel()
-                {
-                    Id = _.Id.ToString(),
-                    Name = _.Name
-                })
-                .ToListAsync();
+            var allCategories = await _categoryDal.GetAllCategories();
 
             return allCategories;
         }

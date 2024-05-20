@@ -35,10 +35,16 @@ a{
     background-color: #888;
     border-radius: 5px;
 }
-
+.login-icon{
+    font-size:20px;
+    color:lightgray
+}
 .login-dropdown-menu{
     position:absolute;
     margin-left:85px;
+}
+.login-wrapper{
+    min-height:520px;
 }
 
 /*Navbars Here*/
@@ -71,10 +77,10 @@ a{
 }
 
 .form-label{
-    min-width:90px;
+    min-width:20px;
     font-weight:700;
     height:100%;
-    margin-top:10px;
+    margin-top:20px;
     padding:5px;
 }
 
@@ -82,11 +88,10 @@ a{
     outline:none;
     padding:5px;
     border:none;
-    width:100%;
+    width:200px;
 }
 
 .search-input-wrapper{
-    min-width:450px;
     border: 1px solid gray;
     padding-top:5px;
     padding-bottom:5px;
@@ -113,7 +118,7 @@ a{
 }
 
 .caraousals-image{
-    max-height:350px;
+    max-height:400px;
 }
 
 /*DetailPage Here*/

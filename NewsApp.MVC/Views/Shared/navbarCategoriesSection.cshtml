@@ -2,9 +2,12 @@
     <!-- SectionBar Starts Here -->
     <ul class="section-navitems-wrapper d-flex items-center justify-content-center gap-4 border-bottom box-shadow p-3">
         <li class="nav-item section-item p-2"><a asp-controller="Home" asp-action="Index">Home</a></li>
-        @foreach (var category in ViewBag.Categories)
+        @foreach (var category in ViewBag.Categories.Data)
         {
-            <li class="nav-item section-item p-2"><a asp-controller="Home" asp-action="CategoryPage" asp-route-categoryName="@category.Name">@category.Name</a></li>
+            if(category.IsDeleted == false)
+            {
+                <li class="nav-item section-item p-2"><a asp-controller="Home" asp-action="CategoryPage" asp-route-categoryName="@category.Name">@category.Name</a></li>
+            }
         }
     </ul>
 </div><!-- SectionBar Ends Here -->

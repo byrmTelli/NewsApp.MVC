@@ -36,6 +36,12 @@ namespace NewsApp.MVC.Controllers
             _fileProvider = fileProvider;
             _categoryService = categoryService;
         }
+        [HttpGet("/linq")]
+        public async Task<IActionResult> GetUsersWithLinq()
+        {
+            var allUsers = await _appUserService.GetAllUsersWithLinq();
+            return View(allUsers.Data);
+        }
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -126,13 +132,19 @@ namespace NewsApp.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(AppUserUpdateRequestModel request)
         {
-            var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name!);
-            request.Id = currentUser.Id;
-            await _appUserService.UpdateUser(request);
+            if (ModelState.IsValid)
+            {
+                var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name!);
+                request.Id = currentUser.Id;
+                await _appUserService.UpdateUser(request);
 
-            var updatedUserViewModel = await _appUserService.GetSingleUserById(currentUser.Id);
+                var updatedUserViewModel = await _appUserService.GetSingleUserById(currentUser.Id);
+
+                return RedirectToAction(nameof(UserController.UpdateUser));
+            }
 
             return RedirectToAction(nameof(UserController.UpdateUser));
+
         }
         public IActionResult AccessDenied(string returnUrl)
         {

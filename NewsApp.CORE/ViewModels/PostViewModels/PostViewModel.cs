@@ -19,5 +19,7 @@ namespace NewsApp.CORE.ViewModels.PostViewModels
         public string Image { get; set; }
         public AppUserViewModel Creator { get; set; }
         public CategoryViewModel Category { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsPublished { get; set; }
     }
 }

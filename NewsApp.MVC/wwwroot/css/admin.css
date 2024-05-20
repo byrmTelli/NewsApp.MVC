@@ -145,3 +145,17 @@ body {
     max-width:150px;
     border-radius:10px;
 }
+
+
+/**/
+
+.dashboard-icon{
+    font-size:32px;
+}
+
+.pie-chart-canva-wrapper{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    max-height:410px;
+}

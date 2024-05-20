@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.OptionModels;
+using NewsApp.DAL.Abstract;
+using NewsApp.DAL.Concrete;
 using NewsApp.DAL.Context;
 using NewsApp.MVC.Extensions;
 using NewsApp.MVC.Seeds;
@@ -56,6 +58,12 @@ builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IAppRoleService, AppRoleService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IEmailService,EmailService>();
+
+
+builder.Services.AddScoped<IAppUserDal, AppUserDal>();
+builder.Services.AddScoped<IPostDal, PostDal>();
+builder.Services.AddScoped<ICategoryDal, CategoryDal>();
+
 
 builder.Services.AddScoped<LoginUserExtensionFilter>();
 builder.Services.AddControllersWithViews(options =>

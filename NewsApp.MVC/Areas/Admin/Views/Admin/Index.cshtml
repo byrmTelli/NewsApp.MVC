@@ -2,8 +2,8 @@
 ﻿@using System.Security.Claims
 
 <div class="row mt-4">
-    <div class="col-md-10 offset-1">
-        <h4>User List</h4>
+    <div class="col-md-12">
+        <h4>Kullanıcılar</h4>
         <hr />
         <div class="row">
             <table id="datatable" class="table table-striped table-hover">
@@ -12,7 +12,8 @@
                         <th>User</th>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>Status</th>
+                        <th>Hesap</th>
+                        <th>Onay Durumu</th>
                         @{
                             if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
                             {
@@ -28,6 +29,13 @@
                             <td>@item.Name @item.Surname</td>
                             <td>@item.UserName</td>
                             <td>@item.Email</td>
+                            <td>@if (item.IsDeleted)
+                                {
+                                    <span class="text-danger">Silindi</span>
+                                }else {
+                                    <span class="text-success">Aktif</span> 
+                                }
+                            </td>
                             <td>
                                 @if (item.IsSubcriber)
                                 {
@@ -54,9 +62,12 @@
                                 if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
                                 {
                                     <td class="d-flex align-items-center justify-content-center gap-1 p-2">
-                                        <a class="btn btn-outline-primary">Detay</a>
-                                        <a class="btn btn-outline-danger">Delete</a>
-                                    </td>
+                                        <a asp-area="Admin" asp-controller="Admin" asp-action="ManageSingleUser" asp-route-userId="@item.Id" class="btn btn-outline-primary">Detay</a>
+                                        <form asp-area="Admin" asp-controller="Admin" asp-action="DeleteUser" method="post">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btn btn-outline-danger">Sil</button>
+                                        </form>
+                                        </td>
                                 }
                             }
                         </tr>

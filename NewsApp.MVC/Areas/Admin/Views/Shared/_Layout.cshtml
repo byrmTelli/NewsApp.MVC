@@ -22,38 +22,34 @@
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-people-arrows"></i>
-                        <a asp-controller="Admin" asp-action="Dashboard" class="nav-section-item text-black">Dashboard</a>
+                        <i class="fa-solid fa-chart-column"></i>
+                        <a asp-controller="Admin" asp-action="Dashboard" class="nav-section-item text-black">Gelişim Paneli</a>
                     </div>
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-people-arrows"></i>
-                        <a asp-controller="Admin" asp-action="Index" class="nav-section-item text-black">Users</a>
+                        <i class="fa-solid fa-users"></i>
+                        <a asp-controller="Admin" asp-action="Index" class="nav-section-item text-black">Kullanıcılar</a>
                     </div>
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-people-arrows"></i>
-                        <a asp-controller="Admin" asp-action="ManageDepartments" class="nav-section-item text-black">Departments</a>
+                        <i class="fa-solid fa-table-cells-large"></i>
+                        <a asp-controller="Admin" asp-action="ManageDepartments" class="nav-section-item text-black">Departmanlar</a>
                     </div>
                     @{
                         if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
                         {
                             <div class="nav-section-item-wrapper">
                                 <i class="fa-solid fa-people-arrows"></i>
-                                <a asp-controller="Admin" asp-action="AssignCategoryToUser" class="nav-section-item text-black">Roles & Authozirations</a>
+                                <a asp-controller="Admin" asp-action="AssignCategoryToUser" class="nav-section-item text-black">Rol ve Yetki Paneli</a>
                             </div>
                         }
                     }
 
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-newspaper"></i>
-                        <a asp-controller="Admin" asp-action="ManagePosts" class="nav-section-item text-black" >Posts</a>
-                    </div>
-                    <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-newspaper"></i>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-section-item text-black">Homepage</a>
+                        <i class="fa-solid fa-house"></i>
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-section-item text-black">Ana Sayfa</a>
                     </div>
                     <div class="nav-section-item-wrapper">
                         <i class="fa-solid fa-right-from-bracket"></i>
-                        <a asp-area="" asp-controller="User" asp-action="SignOut" class="nav-section-item text-black">Logout</a>
+                        <a asp-area="" asp-controller="User" asp-action="SignOut" class="nav-section-item text-black">Çıkış</a>
                     </div>
                 </div>
             </div>
@@ -83,6 +79,7 @@
     <script src="https://kit.fontawesome.com/c9fdab916c.js" crossorigin="anonymous"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/41.2.0/classic/ckeditor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         ClassicEditor
             .create(document.querySelector('#editor'))

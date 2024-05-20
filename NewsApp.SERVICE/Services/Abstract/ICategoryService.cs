@@ -12,7 +12,7 @@ namespace NewsApp.SERVICE.Services.Abstract
 {
     public interface ICategoryService
     {
-        Task<List<CategoryViewModel>> GetAllCategories();
+        Task<Response<List<CategoryViewModel>>> GetAllCategories();
         Task<CategoryViewModel> GetCategoryById(string id);
         Task<CategoryViewModel> GetUsersCategory(string id);
         Task<Response<NoDataViewModel>> CreateCategory(CategoryRequestModel request);

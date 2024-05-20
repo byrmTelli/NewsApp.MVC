@@ -1,32 +1,112 @@
-﻿@{
+﻿@model DashboardViewModel
+
+@{
     ViewData["Title"] = "Dashboard";
 }
-<h4>Dashboard</h4>
+
+<h4>Gelişim Paneli</h4>
+<hr />
 <div class="row d-flex">
-    <div class="col">
-        <div class="custom-admin-card text-center bg-danger text-white">
-            <h4>Writer</h4>
-            <h2>5</h2>
+    <div class="col-md-6 d-flex gap-3">
+        <div class="col">
+            <div class="custom-admin-card text-center bg-light">
+                <i class="fa-solid fa-pen dashboard-icon"></i>
+                <h6 class="mt-2">Author</h6>
+                <h2>@Model.WriterCount</h2>
+            </div>
+        </div>
+        <div class="col">
+            <div class="custom-admin-card text-center bg-light">
+                <i class="fa-solid fa-user-tie dashboard-icon"></i>
+                <h6 class="mt-2">Manager</h6>
+                <h1>@Model.ManagerCount</h1>
+            </div>
+        </div>
+        <div class="col">
+            <div class="custom-admin-card text-center bg-light">
+                <i class="fa-solid fa-user-group dashboard-icon"></i>
+                <h6 class="mt-2">Users</h6>
+                <h2>@Model.UserCount</h2>
+            </div>
+        </div>
+        <div class="col offset">
+            <div class="custom-admin-card text-center bg-light">
+                <i class="fa-solid fa-file-pen dashboard-icon"></i>
+                <h6 class="mt-2">Post</h6>
+                <h2>@Model.PostCount</h2>
+            </div>
         </div>
     </div>
-    <div class="col">
-        <div class="custom-admin-card text-center bg-success text-white">
-            <h4>Manager</h4>
-            <h1>1</h1>
+
+    <div class="col-md-6 bg-light rounded-3">
+    </div>
+</div>
+<div class="row mt-4 bg-light rounded-3 p-2">
+    <div class="col-md-6 rounded-3 p-2">
+        <div>
+            <canvas id="myLineChart"></canvas>
         </div>
     </div>
-    <div class="col">
-        <div class="custom-admin-card text-center bg-warning text-white">
-            <h4>Users</h4>
-            <h5>(Approved)</h5>
-            <h2>10</h2>
-        </div>
-    </div>
-    <div class="col offset">
-        <div class="custom-admin-card text-center bg-primary text-white">
-            <h4>Users</h4>
-            <h2>123</h2>
+    <div class="col-md-6  rounded-3">
+        <div class="pie-chart-canva-wrapper mt-2">
+            <canvas id="myPieChart"></canvas>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const barChartTitles = @Html.Raw(Json.Serialize(Model.BarChartTitles));
+    const barChartData = @Html.Raw(Json.Serialize(Model.BarChartData));
+    const pieChartTitles = @Html.Raw(Json.Serialize(Model.PieChartTitles));
+    const pieChartData = @Html.Raw(Json.Serialize(Model.PieChartData));
+
+    const ctx = document.getElementById('myLineChart');
+    const ctx2 = document.getElementById('myPieChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: barChartTitles,
+            datasets: [{
+                label: 'Kategorilere Göre Genel Post Dağılımı',
+                data: barChartData,
+                borderWidth: 1,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)'
+                ]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: pieChartTitles,
+            datasets: [{
+                label: 'Posts by Category',
+                data: pieChartData,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)'
+                ],
+                hoverOffset: 4
+            }]
+        }
+    });
+</script>

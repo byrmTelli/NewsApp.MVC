@@ -20,5 +20,6 @@ namespace NewsApp.CORE.DBModels
         public bool IsSubscriber { get; set; } = false;
         public Guid? UserCategoryId { get; set; }
         public Category UserCategory { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }
