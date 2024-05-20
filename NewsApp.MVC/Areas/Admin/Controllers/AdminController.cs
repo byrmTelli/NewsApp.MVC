@@ -68,7 +68,7 @@ namespace NewsApp.MVC.Areas.Admin.Controllers
             var userRoles = await _userManager.GetRolesAsync(user);
             ViewBag.AllRoles = allRoles.Data;
             var allCategories = await _categoryService.GetAllCategories();
-            ViewBag.AllCategories = allCategories;
+            ViewBag.AllCategories = allCategories.Data;
             return View(allUsers.Data);
         }
         [HttpPost]
