@@ -1,10 +1,13 @@
 ﻿@model ManageUserViewModel
 ﻿@using System.Security.Claims
 
-<div class="row mt-4">
+<div class="row mt-2">
+    <input hidden asp-for="ApproveUserRequestModel.ApproverId" value="@ViewBag.UserId"/>
+    <div class="row p-2">
+        <h4 class="fw-bold">Kullanıcılar</h4>
+    </div>
     <div class="col-md-12">
-        <h4>Kullanıcılar</h4>
-        <hr />
+        <hr/>
         <div class="row">
             <table id="datatable" class="table table-striped table-hover">
                 <thead>
@@ -25,52 +28,112 @@
                 <tbody>
                     @foreach (var item in Model.UserList)
                     {
-                        <tr>
-                            <td>@item.Name @item.Surname</td>
-                            <td>@item.UserName</td>
-                            <td>@item.Email</td>
-                            <td>@if (item.IsDeleted)
-                                {
-                                    <span class="text-danger">Silindi</span>
-                                }else {
-                                    <span class="text-success">Aktif</span> 
-                                }
-                            </td>
-                            <td>
-                                @if (item.IsSubcriber)
-                                {
-                                    <span class="text-success">Onaylandı</span>
-                                }
-                                else
-                                {
-                                    <form method="post" asp-controller="Admin" asp-action="ApproveUsersAccount">
-                                        <input type="hidden" name="userId" value="@item.Id" />
-                                        @{
-                                            if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
-                                            {
-                                                <button type="submit" class="btn btn-outline-warning">Onayla</button>
+                        @if (item.IsSubcriber)
+                        {
+                            <tr class="">
+                                <td>@item.Name @item.Surname</td>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                <td>
+                                    @if (item.IsDeleted)
+                                    {
+                                        <span class="text-danger">Silindi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">Aktif</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsSubcriber)
+                                    {
+                                        <span class="text-success">Onaylandı</span>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" asp-controller="Admin" asp-action="ApproveUsersAccount">
+                                            <input type="hidden" name="userId" value="@item.Id" />
+                                            @{
+                                                if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                                                {
+                                                    <button type="submit" class="btn btn-outline-warning">Onayla</button>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-warning">Yönetici Onayı Bekliyor</span>
+                                                }
                                             }
-                                            else
-                                            {
-                                                <span class="text-warning">Yönetici Onayı Bekliyor</span>
-                                            }
-                                        }
-                                    </form>
-                                }
-                            </td>
-                            @{
-                                if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
-                                {
-                                    <td class="d-flex align-items-center justify-content-center gap-1 p-2">
-                                        <a asp-area="Admin" asp-controller="Admin" asp-action="ManageSingleUser" asp-route-userId="@item.Id" class="btn btn-outline-primary">Detay</a>
-                                        <form asp-area="Admin" asp-controller="Admin" asp-action="DeleteUser" method="post">
-                                            <input type="hidden" name="id" value="@item.Id" />
-                                            <button type="submit" class="btn btn-outline-danger">Sil</button>
                                         </form>
+                                    }
+                                </td>
+                                @{
+                                    if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                                    {
+                                        <td class="d-flex align-items-center justify-content-center gap-1 p-2">
+                                            <a asp-area="Admin" asp-controller="Admin" asp-action="ManageSingleUser" asp-route-userId="@item.Id" class="btn btn-outline-primary">Detay</a>
+                                            <form asp-area="Admin" asp-controller="Admin" asp-action="DeleteUser" method="post">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit" class="btn btn-outline-danger">Sil</button>
+                                            </form>
                                         </td>
+                                    }
                                 }
-                            }
-                        </tr>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="bg-warning">
+                                <td>@item.Name @item.Surname</td>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                <td>
+                                    @if (item.IsDeleted)
+                                    {
+                                        <span class="text-danger">Silindi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">Aktif</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsSubcriber)
+                                    {
+                                        <span class="text-success">Onaylandı</span>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" asp-controller="Admin" asp-action="ApproveUsersAccount">
+                                            <input hidden asp-for="ApproveUserRequestModel.ApproverId" name="ApproverId" value="@ViewBag.UserId" />
+                                            <input hidden asp-for="ApproveUserRequestModel.UserId" name="UserId" value="@item.Id"/>
+                                            <input type="hidden" name="userId" value="@item.Id" />
+                                            @{
+                                                if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                                                {
+                                                    <button type="submit" class="btn btn-outline-success text-white fw-bold">Onayla</button>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-warning">Yönetici Onayı Bekliyor</span>
+                                                }
+                                            }
+                                        </form>
+                                    }
+                                </td>
+                                @{
+                                    if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                                    {
+                                        <td class="d-flex align-items-center justify-content-center gap-1 p-2">
+                                            <a asp-area="Admin" asp-controller="Admin" asp-action="ManageSingleUser" asp-route-userId="@item.Id" class="btn btn-outline-primary">Detay</a>
+                                            <form asp-area="Admin" asp-controller="Admin" asp-action="DeleteUser" method="post">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit" class="btn btn-outline-danger">Sil</button>
+                                            </form>
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>

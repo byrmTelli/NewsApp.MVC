@@ -33,6 +33,8 @@ namespace NewsApp.MVC.Extensions
                     // Controller tipinde bir nesne alalım
                     var controller = context.Controller as Controller;
                     // ViewData veya ViewBag'e kullanıcı bilgilerini ve profil fotoğrafını ekleyin
+                    controller.ViewData["CurrentUserId"] = currentUser.Id;
+                    controller.ViewData["CurrentUserCategoryId"] = currentUser.UserCategoryId.ToString() ?? "";
                     controller.ViewData["CurrentUser"] = currentUser.Name+" "+currentUser.Surname;
                     controller.ViewData["ProfileImage"] = currentUser.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(currentUser.Image); // Profil fotoğrafı örneği
                 }

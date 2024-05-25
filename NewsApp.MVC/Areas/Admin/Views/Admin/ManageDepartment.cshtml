@@ -71,9 +71,8 @@
                            <th>Date</th>
                            <th>Status</th>
                            <th>Category</th>
-                           <th>
-                               <a class="btn btn-dark">More</a>
-                           </th>
+                           <th></th>
+                           <th></th>
                        </tr>
                     </thead>
                     <tbody>
@@ -91,6 +90,9 @@
                                         <input type="hidden" name="postId" value="@post.Id" />
                                         <button type="submit" class="btn btn-outline-success">Approve</button>
                                     </form>
+                                </td>
+                                <td>
+                                    <a asp-controller="Post" asp-action="Inspect" asp-route-postId="@post.Id">İncele</a>
                                 </td>
                             </tr>
                         }

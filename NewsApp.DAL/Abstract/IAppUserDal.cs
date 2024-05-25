@@ -1,5 +1,7 @@
 ﻿using NewsApp.CORE.DataAccess;
 using NewsApp.CORE.DBModels;
+using NewsApp.CORE.Generics;
+using NewsApp.CORE.ViewModels.AdminPageViewModels.AssignCategoryRoleViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
 using NewsApp.CORE.ViewModels.UserViewModels;
 using System;
@@ -15,5 +17,7 @@ namespace NewsApp.DAL.Abstract
         Task<List<AppUserViewModel>> GetAllUsersWithCategoryAndRole();
         Task<NoDataViewModel> DeleteUser(string id);
         Task<NoDataViewModel> ReActiveUser(string id);
+        Task<Response<AppUserViewModel>> AssignCategoryToUserAsync(AssingCategoryOrRoleToUserViewModel request);
+        Task<int> NewUserCountMontly();
     }
 }

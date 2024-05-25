@@ -2,7 +2,7 @@
     ViewData["Title"] = "SignUp";
 }
 
-@model AppUserRegisterViewModel
+@model AppUserRegisterRequestModel
 
 
 @section  Scripts 
@@ -11,9 +11,9 @@
     @await Html.PartialAsync("_ValidationScriptsPartial");
 
 }
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <h2 class="text-center">Sign Up</h2>
+<div class="row p-3 mt-4 shadow border rounded-3">
+    <div class="col-md-8 offset-md-2">
+        <h5 class="text-start">Sign Up</h5>
         <hr/>
 
         @if(TempData["SuccessMessage"]!=null)
@@ -27,66 +27,137 @@
             </div>   
 
         <form asp-controller="Home" asp-action="SignUp" method="post">
-            <div class="row mb-3">
-                <label for="Username" asp-for="Username" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="Username" autocomplete="off">
-                    <span asp-validation-for="Username" class="text-danger"></span>
+                    <div class="row">
+                        <div class="col-md-6 login-wrapper">
+                            <div class="row mb-3">
+                        <label for="Username" asp-for="Username" class="col-md-4 col-form-label fw-bold"></label>
+                        <div class="col-md-8">
+                            <input class="form-control" asp-for="Username" autocomplete="off">
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                    </div>
+            
+
+                    <div class="row mb-3">
+                        <label for="Email" asp-for="Email" class="col-md-4 col-form-label fw-bold"></label>
+                        <div class="col-md-8">
+                            <input class="form-control" asp-for="Email" type="email" autocomplete="off">
+                             <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+            
+                    <div class="row mb-3">
+                        <label for="Password" asp-for="Password" class="col-md-4 col-form-label fw-bold"></label>
+                        <div class="col-md-8">
+                            <input class="form-control" asp-for="Password" type="password" autocomplete="off">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="ConfirmPassword" asp-for="ConfirmPassword" class="col-md-4 col-form-label fw-bold"></label>
+                        <div class="col-md-8">
+                            <input class="form-control" asp-for="ConfirmPassword" type="password" autocomplete="off">
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="Phone" asp-for="Phone" class="col-md-4 col-form-label fw-bold"></label>
+                        <div class="col-md-8">
+                        <input 
+                            class="form-control" 
+                            asp-for="Phone" 
+                            type="tel" 
+                            autocomplete="off" 
+                            placeholder="(5**) *** ****" 
+                            pattern="[0-9]{3} [0-9]{3} [0-9]{2} [0-9]{2}"
+                            title="Telefon numarası formatı: 555 123 4567"/>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col">
+                    <div class="row mb-3">
+                    <label for="Name" asp-for="Name" class="col-md-4 col-form-label fw-bold"></label>
+                    <div class="col-md-8">
+                        <input class="form-control" asp-for="Name" autocomplete="off">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="Surname" asp-for="Surname" class="col-md-4 col-form-label fw-bold"></label>
+                    <div class="col-md-8">
+                        <input class="form-control" asp-for="Surname" autocomplete="off">
+                        <span asp-validation-for="Surname" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label asp-for="BirthDate" class="col-md-4 col-form-label fw-bold"></label>
+                    <div class="col-md-8">
+                        <input class="form-control" asp-for="BirthDate" type="date" autocomplete="off">
+                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                 <div class="row mb-3">
+                    <label asp-for="HomeLand" class="col-md-4 col-form-label fw-bold"></label>
+                    <div class="col-md-8">
+                        <input class="form-control" asp-for="HomeLand" type="text" autocomplete="off">
+                        <span asp-validation-for="HomeLand" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-8 offset-md-4 d-flex align-items-center justify-content-end flex-column">
+                        <p class="text-justify">Kayıt işleminiz sırasında kabul etmeniz gereken            <button type="button" class="privacy-policy-button" data-bs-toggle="modal" data-bs-target="#exampleModalLong">
+ 
+"Gizlilik Politikası"</button> metnini lütfen okuyunuz.</p>
+                            <span asp-validation-for="PrivacyPolicy" class="text-danger"></span>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Gizlilik Politikası</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p class="text-justify">What is Lorem Ipsum?
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+
+Why do we use it?
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+
+Where does it come from?
+Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+
+The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</p>
+                        <div class="d-flex gap-1 justify-content-end">
+                            <label asp-for="PrivacyPolicy"></label>
+                            <input asp-for="PrivacyPolicy" class="form-check"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-8 offset-md-4 d-flex align-items-center justify-content-end">
+                        <button type="submit" class="btn btn-dark">Submit</button>
+                    </div>
+                </div>
                 </div>
             </div>
             
-            <div class="row mb-3">
-                <label for="Email" asp-for="Email" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="Email" type="email" autocomplete="off">
-                     <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-            </div>
-            
-            <div class="row mb-3">
-                <label for="Password" asp-for="Password" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="Password" autocomplete="off">
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label for="ConfirmPassword" asp-for="ConfirmPassword" class="col-md-4 col-form-label">Confirm Password</label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="ConfirmPassword" autocomplete="off">
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label for="Name" asp-for="Name" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="Name" autocomplete="off">
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <label for="Surname" asp-for="Surname" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="Surname" autocomplete="off">
-                    <span asp-validation-for="Surname" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label asp-for="BirthDate" class="col-md-4 col-form-label"></label>
-                <div class="col-md-8">
-                    <input class="form-control" asp-for="BirthDate" autocomplete="off">
-                    <span asp-validation-for="BirthDate" class="text-danger"></span>
-                </div>
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-md-8 offset-md-4 d-flex align-items-center justify-content-end">
-                <button type="submit" class="btn btn-dark">Submit</button>
-                </div>
-            </div>
         </form>    
     </div>
 </div

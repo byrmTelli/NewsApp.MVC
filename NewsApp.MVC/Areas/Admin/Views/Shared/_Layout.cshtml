@@ -17,50 +17,101 @@
     <div class="site-wrapper">
         <div class="admin-sidebar">
             <div class="sidebar-content-wrapper">
-                <div class="sidebar-brand-wrapper">
-                    <h2 class="p-4">DailyNews</h2>
+                <div class="container bg-light-blue-1">
+                    <div class="sidebar-brand-wrapper">
+                        <h2 class="p-4 text-white sidebar-nav-item-brand">DailyNews</h2>
+                    </div>
+                    <div class="row sidebar-profile-wrapper p-2">
+                        <div class="navbar-user-info  d-flex flex-column align-items-center justify-content-center">
+                            <img class="navbar-user-image" src="@ViewData["ProfileImage"]" alt="">
+                            <div class="text-center w-100 d-flex flex-column text-white">
+                                <span class="text-capitalize sidebar-nav-item-brand">@ViewData["CurrentUser"]</span>
+                                @{
+                                    if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
+                                    {
+                                        <span class="fw-light sidebar-nav-item-brand">Admin</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-chart-column"></i>
-                        <a asp-controller="Admin" asp-action="Dashboard" class="nav-section-item text-black">Gelişim Paneli</a>
+                        <a asp-controller="Admin"
+                           asp-action="Dashboard"
+                           data-toggle="tooltip"
+                           title="Gelişim Paneli"
+                           class="w-100 nav-section-item text-black gap-3 d-flex align-items-center justify-content-start">
+                            <i class="fa-solid fa-chart-column sidebar-icon"></i>
+                            <span class="sidebar-nav-item-brand">Gelişim Paneli</span>
+                        </a>
                     </div>
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-users"></i>
-                        <a asp-controller="Admin" asp-action="Index" class="nav-section-item text-black">Kullanıcılar</a>
+                        <a asp-controller="Admin"
+                           asp-action="Index"
+                           data-toggle="tooltip"
+                           title="Kullanıcılar"
+                           class="w-100 nav-section-item text-black gap-3 d-flex align-items-center justify-content-start">
+                            <i class="fa-solid fa-users sidebar-icon"></i>
+                            <span class="sidebar-nav-item-brand">Kullanıcılar</span>
+                        </a>
                     </div>
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-table-cells-large"></i>
-                        <a asp-controller="Admin" asp-action="ManageDepartments" class="nav-section-item text-black">Departmanlar</a>
+                        <a asp-controller="Admin"
+                           asp-action="ManageDepartments"
+                           data-toggle="tooltip"
+                           title="Departmanlar"
+                           class="w-100 nav-section-item text-black gap-3 d-flex align-items-center justify-content-start">
+                            <i class="fa-solid fa-table-cells-large sidebar-icon"></i>
+                            <span class="sidebar-nav-item-brand">Departmanlar</span>
+                        </a>
                     </div>
                     @{
                         if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
                         {
                             <div class="nav-section-item-wrapper">
-                                <i class="fa-solid fa-people-arrows"></i>
-                                <a asp-controller="Admin" asp-action="AssignCategoryToUser" class="nav-section-item text-black">Rol ve Yetki Paneli</a>
+                                <a asp-controller="Admin"
+                                   asp-action="AssignCategoryToUser"
+                                   data-toggle="tooltip"
+                                   title="Rol ve Yetki Paneli"
+                                   class="w-100 nav-section-item text-black gap-3 d-flex align-items-center justify-content-start">
+                                    <i class="fa-solid fa-people-arrows sidebar-icon"></i>
+                                    <span class="sidebar-nav-item-brand">Rol ve Yetki Paneli</span>
+                                </a>
                             </div>
                         }
                     }
 
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-house"></i>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-section-item text-black">Ana Sayfa</a>
+                        <a 
+                            asp-area="" asp-controller="Home" 
+                            asp-action="Index"
+                           data-toggle="tooltip"
+                           title="Ana Sayfa"
+                           class="w-100 nav-section-item text-black gap-3 d-flex align-items-center justify-content-start">
+                            <i class="fa-solid fa-house sidebar-icon"></i>
+                            <span class="sidebar-nav-item-brand">Ana Sayfa</span>
+                        </a>
                     </div>
                     <div class="nav-section-item-wrapper">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <a asp-area="" asp-controller="User" asp-action="SignOut" class="nav-section-item text-black">Çıkış</a>
+                        <a 
+                            asp-area="" 
+                            asp-controller="User" 
+                            asp-action="SignOut"
+                           data-toggle="tooltip"
+                           title="Çıkış"
+                           class="w-100 nav-section-item text-black gap-3 d-flex align-items-center justify-content-start">
+                            <i class="fa-solid fa-right-from-bracket sidebar-icon"></i>
+                            <span class="sidebar-nav-item-brand">Çıkış</span>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="content">
-            <div class="content-navbar bg-dark text-white">
+            <div class="content-navbar bg-dark-blue text-white">
                 <i class="fa-solid fa-bars navbar-toggle-icon"></i>
-                <div class="navbar-user-info d-flex gap-2 align-items-center justify-content-center">
-                    <span class="p-2 text-capitalize">@ViewData["CurrentUser"]</span>
-                    <img class="navbar-user-image" src="@ViewData["ProfileImage"]" alt="">
-                </div>
             </div><!--here content-navbar-ends-->
             <div class="content-data">
                 <div>
@@ -94,6 +145,35 @@
 
             });
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleIcon = document.querySelector('.navbar-toggle-icon');
+            const sidebar = document.querySelector('.sidebar-content-wrapper');
+
+            const setSidebarState = () => {
+                const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+                if (isCollapsed) {
+                    sidebar.classList.add('collapsed');
+                } else {
+                    sidebar.classList.remove('collapsed');
+                }
+            };
+
+            setSidebarState();
+
+            toggleIcon.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+
+                const isCollapsed = sidebar.classList.contains('collapsed');
+                localStorage.setItem('sidebar-collapsed', isCollapsed);
+            });
+
+
+            document.addEventListener('ajaxComplete', () => {
+                setSidebarState();
+            });
+        });
+
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

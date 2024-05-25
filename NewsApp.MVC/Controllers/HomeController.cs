@@ -38,7 +38,7 @@ namespace NewsApp.MVC.Controllers
             _categoryService = categoryService;
             _appUserService = appUserService;
         }
-
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             ViewBag.Categories = await _categoryService.GetAllCategories();
@@ -53,7 +53,7 @@ namespace NewsApp.MVC.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("user/register")]
         public async Task<IActionResult> SignUp()
         {
             return View();
@@ -63,16 +63,22 @@ namespace NewsApp.MVC.Controllers
         public async Task<IActionResult> Detail(string id)
         {
             ViewBag.Categories = await _categoryService.GetAllCategories();
-            var news = await _postService.GetSingleNewsById(id);
-            return View(news);
+            var news = await _postService.GetSinglePostById(id);
+            return View(news.Data);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SignUp(AppUserRegisterViewModel model)
+        [HttpPost("user/register")]
+        public async Task<IActionResult> SignUp(AppUserRegisterRequestModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View();
+            }
+
+            if (!model.PrivacyPolicy)
+            {
+                ModelState.AddModelError(nameof(model.PrivacyPolicy), "Gizlilik politikasýný kabul etmelisiniz.");
+                return View(model);
             }
 
             var identityResult = await _userManager
@@ -82,7 +88,10 @@ namespace NewsApp.MVC.Controllers
                                                         Name=model.Name,
                                                         Surname = model.Surname,
                                                         Email = model.Email,
-                                                        BirthDate = model.BirthDate
+                                                        BirthDate = model.BirthDate,
+                                                        Phone = model.Phone,
+                                                        HomeLand = model.HomeLand,
+                                                        CreatedDate = DateTime.Now,
                                                     }
                                                     ,model.Password
                                                     );

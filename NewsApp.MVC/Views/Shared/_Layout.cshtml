@@ -8,19 +8,19 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NewsApp.MVC.styles.css" asp-append-version="true" />
+    <!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/x31d11erkyrqe5zp4of3qtqapk7p8ehcduiekr363mgqr1vl/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
 
 
 </head>
 <body>
     <header class="">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow homepage-navbar">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow homepage-navbar">
             <div class="container-fluid items-center justify-content-between">
-                <div class="d-flex justify-content-center">
-                    <a class="navbar-brand text-white fw-bolder website-brand" asp-area="" asp-controller="Home" asp-action="Index">DailyNews</a>
-                </div>
-                <div class="search-input-wrapper d-flex gap-2 align-items-center bg-white">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" class="custom-input text-capitalize" placeholder="search..." autocomplete="off" />
+                <div class="d-flex justify-content-center align-items-center">
+                    <a class="navbar-brand fw-bolder website-brand" asp-area="" asp-controller="Home" asp-action="Index">DailyNews</a>
+                    <span class="text-dark">| Türkiye <i class="fa-solid fa-location-dot" style="font-size:10px;"></i></span>
                 </div>
                 <div>
                     <partial name="navbarUserLoginSection" />
@@ -31,9 +31,10 @@
 
 
 
-    <div class="container"><!--Mid Container Starts Here-->
-        <main role="main" class="pb-3">
-            @RenderBody()
+    <div class="container">
+        <!--Mid Container Starts Here-->
+        <main role="main" class="pb-3 ">
+                @RenderBody()
         </main>
     </div><!--Mid Container Ends Here-->
 
@@ -52,21 +53,21 @@
                 </div>
                 <div class="col-md-3">
                     <h6>About Us</h6>
-                    <hr/>
+                    <hr />
                     <ul class="footer-lists">
                         <li><i class="fa-solid fa-globe"></i> www.dailynewsglobal.com</li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h6>Support</h6>
-                    <hr/>
+                    <hr />
                     <ul class="footer-lists">
                         <li>Click <a href=""><span>here</span></a> to get contact with support department.</li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h6>Socials</h6>
-                    <hr/>
+                    <hr />
                     <ul class="footer-lists">
                         <li><i class="fa-brands fa-linkedin"></i> Linkedin</li>
                         <li><i class="fa-brands fa-youtube"></i> Youtube</li>
@@ -88,6 +89,20 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/41.2.0/classic/ckeditor.js"></script>
     <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+        });
+
+
         ClassicEditor
             .create(document.querySelector('#editor'))
             .catch(error => {
@@ -102,6 +117,8 @@
             });
         });
     </script>
+
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

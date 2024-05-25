@@ -1,4 +1,5 @@
-﻿using NewsApp.CORE.ViewModels.UserViewModels;
+﻿using NewsApp.CORE.RequestModels.AdminRequestModels;
+using NewsApp.CORE.ViewModels.UserViewModels;
 
 namespace NewsApp.CORE.ViewModels.AdminPageViewModels
 {
@@ -9,5 +10,6 @@ namespace NewsApp.CORE.ViewModels.AdminPageViewModels
         public int NonApprovedUserCount { get; set; }
         public int TotalUser { get; set; }
         public List<AppUserViewModel> UserList { get; set; }
+        public ApproveUserRequestModel ApproveUserRequestModel { get; set; }
     }
 }

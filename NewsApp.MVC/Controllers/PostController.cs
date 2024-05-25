@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.RequestModels.NewsRequestModels;
 using NewsApp.CORE.ViewModels.CategoryViewModels;
+using NewsApp.CORE.ViewModels.PostViewModels;
 using NewsApp.SERVICE.Services.Abstract;
 
 namespace NewsApp.MVC.Controllers
@@ -53,7 +54,7 @@ namespace NewsApp.MVC.Controllers
                 ViewBag.CurrentUserId = currentUser?.Id;
                 return View();
             }
-            ViewBag.Categories = allCategories;
+            ViewBag.Categories = allCategories.Data;
             ViewBag.CurrentUserId = currentUser?.Id;
 
             return View();
@@ -62,16 +63,17 @@ namespace NewsApp.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(PostRequestModel model)
         {
+            var categories = await _categoryService.GetAllCategories();
             if (!ModelState.IsValid)
             {
+                ViewBag.Categories = categories.Data;
                 return View();
             }
 
             var user = await _userManager.FindByNameAsync(User.Identity!.Name);
             var usersCategories = await _categoryService.GetUsersCategory(user!.Id);
             var userRoles = await _userManager.GetRolesAsync(user);
-            var categories = await _categoryService.GetAllCategories();
-            ViewBag.Categories = categories;
+            ViewBag.Categories = categories.Data;
 
             if (userRoles.Contains("admin"))
             {
@@ -93,6 +95,85 @@ namespace NewsApp.MVC.Controllers
             }
 
         }
+        [HttpGet("post/update/{postId}")]
+        public async Task<IActionResult> Update(string postId)
+        {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name!);
+            var usersCategory = await _categoryService.GetUsersCategory(currentUser!.Id);
+            var usersRoles = await _userManager.GetRolesAsync(currentUser);
+            var allCategories = await _categoryService.GetAllCategories();
+
+            var post = await _postService.GetSinglePostById(postId);
+
+            if (!usersRoles.Contains("admin"))
+            {
+                ViewBag.Categories = new List<CategoryViewModel> { usersCategory };
+                ViewBag.CurrentUserId = currentUser?.Id;
+                return View(post.Data);
+            }
+
+            ViewBag.Categories = allCategories.Data;
+            ViewBag.CurrentUserId = currentUser?.Id;
+
+            return View(post.Data);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(PostRequestModel model)
+        {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity!.Name!);
+            var usersRoles = await _userManager.GetRolesAsync(currentUser);
+
+            if (ModelState.IsValid && (currentUser!.Id == model.CreatorId | usersRoles.Contains("admin")))
+            {
+                await _postService.UpdatePost(model);
+                return RedirectToAction("Index","Home");
+            }
+            var usersCategory = await _categoryService.GetUsersCategory(currentUser!.Id);
+            var allCategories = await _categoryService.GetAllCategories();
+
+
+            if (!usersRoles.Contains("admin"))
+            {
+                ViewBag.Categories = new List<CategoryViewModel> { usersCategory };
+                ViewBag.CurrentUserId = currentUser?.Id;
+                return View();
+            }
+
+            ViewBag.Categories = allCategories.Data;
+            ViewBag.CurrentUserId = currentUser?.Id;
+
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(string postId)
+        {
+            if(postId !=null) {
+            await _postService.Delete(postId);
+                return RedirectToAction("Index","Home");
+            }
+            return View();
+        }
+        [Authorize("admin")]
+        [HttpPost]
+        public async Task<IActionResult> DeletePermanently(string postId)
+        {
+            if (postId != null)
+            {
+                await _postService.DeletePermanently(postId);
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        [HttpGet("post/view/{postId}")]
+        public async Task<IActionResult> Inspect(string postId)
+        {
+            ViewBag.Categories = await _categoryService.GetAllCategories();
+            var post =await _postService.GetSinglePostById(postId);
+            return View(post.Data);
+        }
+
+
 
     }
 }

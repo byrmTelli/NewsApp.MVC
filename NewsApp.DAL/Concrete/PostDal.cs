@@ -2,8 +2,10 @@
 using NewsApp.CORE.DataAccess.EntityFramework;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.Generics;
+using NewsApp.CORE.RequestModels.NewsRequestModels;
 using NewsApp.CORE.ViewModels.AdminPageViewModels;
 using NewsApp.CORE.ViewModels.CategoryViewModels;
+using NewsApp.CORE.ViewModels.CustomViewModels;
 using NewsApp.CORE.ViewModels.PostViewModels;
 using NewsApp.CORE.ViewModels.UserViewModels;
 using NewsApp.DAL.Abstract;
@@ -150,7 +152,6 @@ namespace NewsApp.DAL.Concrete
                 }
             }
         }
-
         public async Task<Response<ManageSingleUserViewModel>> GetAllPostsOfUser(string userId)
         {
             using (var context = new AppDbContext())
@@ -221,6 +222,238 @@ namespace NewsApp.DAL.Concrete
                 catch(Exception ex)
                 {
                     return Response<ManageSingleUserViewModel>.Fail("Bir hata ile karşılaşıldı. Hata: "+ex,500,true);
+                }
+            }
+        }
+        public async Task<int> GetMontlyApprovedPostCount()
+        {
+            using(var context = new AppDbContext())
+            {
+                try
+                {
+
+                    var result = await (from post in context.Posts
+                                        where post.CreatedAt.Month == DateTime.Now.Month
+                                        select post
+                                       ).ToListAsync();
+                    if(result == null)
+                    {
+                        return 0;
+                    }
+
+                    return result.Count;
+
+                }catch(Exception ex)
+                {
+                    return 0;
+                }
+            }
+        }
+        public async Task<Response<NoDataViewModel>> Delete(string postId)
+        {
+            using (var context  = new AppDbContext())
+            {
+                try
+                {
+
+                    var isPostExist = await (from post in context.Posts
+                                             where post.Id == Guid.Parse(postId)
+                                             select post
+                                            ).FirstOrDefaultAsync();
+                    if(isPostExist == null)
+                    {
+                        return Response<NoDataViewModel>.Fail("There is no post matched given id", 404, true);
+                    }
+
+                    isPostExist.IsDeleted = true;
+                    await context.SaveChangesAsync();
+
+                    return Response<NoDataViewModel>.Success(201);
+
+                }catch(Exception ex)
+                {
+                    return Response<NoDataViewModel>.Fail("Bir hata meydana geldi.Hata: " + ex, 500,true);
+                }
+            }
+        }
+        public async Task<Response<NoDataViewModel>> DeletePermanently(string postId)
+        {
+            using (var context = new AppDbContext())
+            {
+                try
+                {
+
+                    var isPostExist = await(from post in context.Posts
+                                            where post.Id == Guid.Parse(postId)
+                                            select post
+                                            ).FirstOrDefaultAsync();
+                    if (isPostExist == null)
+                    {
+                        return Response<NoDataViewModel>.Fail("There is no post matched given id", 404, true);
+                    }
+
+                    context.Remove(isPostExist);
+                    await context.SaveChangesAsync();
+
+                    return Response<NoDataViewModel>.Success(201);
+
+                }
+                catch (Exception ex)
+                {
+                    return Response<NoDataViewModel>.Fail("Bir hata meydana geldi.Hata: " + ex, 500, true);
+                }
+            }
+        }
+        public async Task<Response<PostViewModel>> GetPostById(string postId)
+        {
+            using (var context = new AppDbContext())
+            {
+                try
+                {
+                    var isPostExist = await (from post in context.Posts
+                                             join postUser in context.Users on post.CreatorId equals postUser.Id
+                                             join category in context.Categories on post.CategoryId equals category.Id
+                                             where  post.CategoryId == category.Id && post.Id.ToString() == postId
+                                             select new PostViewModel()
+                                             {
+                                                 Id = post.Id.ToString(),
+                                                 Title = post.Title,
+                                                 Content = post.Content,
+                                                 CreatedAt =post.CreatedAt,
+                                                 IsSubscriberOnly = post.IsPrivateOnly,
+                                                 Image = post.Image,
+                                                 Creator = new AppUserViewModel()
+                                                 {
+                                                     Id=postUser.Id,
+                                                     Name = postUser.Name,
+                                                     Surname = postUser.Surname,
+                                                     UserName = postUser.UserName,
+                                                     UserCategory = new CategoryViewModel()
+                                                     {
+                                                         Id = category.Id.ToString(),
+                                                         Name = category.Name,
+                                                         IsDeleted = category.IsDeleted,
+                                                     }
+                                                 },
+                                                 Category = new CategoryViewModel()
+                                                 {
+                                                     Id = category.Id.ToString(),
+                                                     Name = category.Name,
+                                                     IsDeleted = category.IsDeleted,
+                                                 },
+                                                 IsDeleted = post.IsDeleted,
+                                                 IsPublished = post.IsPublished
+                                             }).FirstOrDefaultAsync();
+
+                    if(isPostExist == null)
+                    {
+                        return Response<PostViewModel>.Fail("İlgili post bulunamadı.",404, true);
+                    }
+
+                    return Response<PostViewModel>.Success(isPostExist, 200);
+
+
+                }catch(Exception ex)
+                {
+                    return Response<PostViewModel>.Fail("Bir hata meydana geldi.Hata: ", 500, true);
+                }
+            }
+        }
+        public async Task<Response<NoDataViewModel>> ApprovePost(string postId)
+        {
+            using (var context = new AppDbContext())
+            {
+                try
+                {
+                    var isPostExist = await (from post in context.Posts
+                                             where post.Id.ToString() == postId
+                                             select post
+                                             ).FirstOrDefaultAsync();
+                    if(isPostExist == null)
+                    {
+                        return Response<NoDataViewModel>.Fail("İlgili kayıt bulunamadı.", 404, true);
+                    }
+
+                    isPostExist.IsPublished = true;
+                    await context.SaveChangesAsync();
+
+                    return Response<NoDataViewModel>.Success(204);
+
+                }catch(Exception ex)
+                {
+                    return Response<NoDataViewModel>.Fail("Bir hata ile karşılaşıldı.Hata: " + ex, 500, true);
+                }
+            }
+        }
+        public async Task<Response<NoDataViewModel>> Create(PostRequestModel request)
+        {
+            using(var context = new AppDbContext())
+            {
+                try
+                {
+                    var newsModel = new Post()
+                    {
+                        Title = request.Title,
+                        CategoryId = Guid.Parse(request.CategoryId),
+                        Content = request.Content,
+                        CreatorId = request.CreatorId,
+                        CreatedAt = DateTime.Now,
+                        Image = request.Image,
+                        IsPrivateOnly = request.IsPrivateOnly,
+                        IsPublished = request.IsPublished
+                    };
+
+                    context.Posts.Add(newsModel);
+                    await context.SaveChangesAsync();
+
+                    return Response<NoDataViewModel>.Success(204);
+                }
+                catch(Exception ex)
+                {
+                    return Response<NoDataViewModel>.Fail("Bir hata meydana geldi.Hata: " + ex, 500, true);
+                }
+            }
+        }
+
+        public async Task<Response<NoDataViewModel>> Update(PostRequestModel request)
+        {
+            using(var context = new AppDbContext())
+            {
+                try
+                {
+
+                    var isPostExist = await (from post in context.Posts
+                                             where post.Id.ToString() == request.Id
+                                             select new Post()
+                                             {
+                                                 Id= Guid.Parse(request.Id),
+                                                 Content = request.Content,
+                                                 CreatedAt = post.CreatedAt,
+                                                 Image = request.Image,
+                                                 IsPrivateOnly = request.IsPrivateOnly,
+                                                 IsPublished = false,
+                                                 IsDeleted = post.IsDeleted,
+                                                 CreatorId = post.CreatorId,
+                                                 Creator = post.Creator,
+                                                 Category=post.Category,
+                                                 CategoryId=post.CategoryId,
+                                                 Title = request.Title
+                                             }
+                                             ).FirstOrDefaultAsync();
+
+                    if(isPostExist == null)
+                    {
+                        return Response<NoDataViewModel>.Fail("Kayıt bulunamadı.", 404,true);
+                    }
+
+                    context.Update(isPostExist);
+                    await context.SaveChangesAsync();
+
+                    return Response<NoDataViewModel>.Success(204);
+
+                }catch(Exception ex)
+                {
+                    return Response<NoDataViewModel>.Fail("Bir hata meydana geldi. Hata: " + ex, 500, true);
                 }
             }
         }

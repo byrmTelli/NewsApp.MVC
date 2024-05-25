@@ -2,13 +2,13 @@
 ﻿@using System.Security.Claims
 
 <div class="row">
-    <div class="col d-flex align-items-center justify-content-between">
-        <h4>Departman Yönetimi</h4>
+    <div class="col p-2 d-flex align-items-center justify-content-between">
+        <h4 class="fw-bold">Departman Yönetimi</h4>
         <!-- Button trigger modal -->
         @{
             if (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin"))
             {
-                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                <button type="button" class="btn bg-dark-green text-white fw-bold p-2" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                     New Department
                 </button>
             }

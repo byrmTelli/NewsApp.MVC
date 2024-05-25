@@ -20,10 +20,6 @@ namespace NewsApp.CORE.DBModels
         public bool IsPrivateOnly { get; set; } = false;
         public bool IsPublished { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
-
-        public Post()
-        {
-            
-        }
+        public Post(){}
     }
 }

@@ -14,13 +14,15 @@ namespace NewsApp.SERVICE.Services.Abstract
     public interface IPostService
     {
         Task<Response<List<PostViewModel>>> GetPostsByCategory(string categoryName);
-        Task<Response<NoDataViewModel>> Delete(string id);
+        Task<Response<NoDataViewModel>> Delete(string postId);
+        Task<Response<NoDataViewModel>> DeletePermanently(string postId);
         Task<Response<List<PostViewModel>>> GettAllPosts();
-        Task<PostViewModel> GetSingleNewsById(string id);
+        Task<Response<PostViewModel>> GetSinglePostById(string id);
         Task<Response<List<PostViewModel>>> FilterPost(Func<PostViewModel,bool> exp);
         Task<Response<NoDataViewModel>> Create(PostRequestModel model);
         Task<Response<ManageSingleUserViewModel>> GetAllPostsOfUser(string userId);
         Task<Response<List<PostViewModel>>> GetUnPublishedPostsByCategory(string categoryName);
         Task<Response<NoDataViewModel>> ApprovePost(string postId);
+        Task<Response<NoDataViewModel>> UpdatePost(PostRequestModel model);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.Generics;
+using NewsApp.CORE.RequestModels.AdminRequestModels;
 using NewsApp.CORE.RequestModels.UserRequestModels;
 using NewsApp.CORE.ViewModels.AdminPageViewModels.AssignCategoryRoleViewModels;
 using NewsApp.CORE.ViewModels.CategoryViewModels;
@@ -27,95 +28,32 @@ namespace NewsApp.SERVICE.Services.Concrete
     public class AppUserService : IAppUserService
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<AppRole> _roleManager;
         private readonly AppDbContext _context;
         private readonly IAppUserDal _userDal;
-        public AppUserService(UserManager<AppUser> userManager, AppDbContext context,RoleManager<AppRole> roleManager, IAppUserDal userDal)
+        private readonly IApproveUserDal _approveUserDal;
+        public AppUserService(UserManager<AppUser> userManager, AppDbContext context, IApproveUserDal approveUserDal, IAppUserDal userDal)
         {
             _userDal = userDal;
             _userManager = userManager;
             _context = context;
-            _roleManager = roleManager;
+            _approveUserDal = approveUserDal;
         }
         public async Task<Response<AppUserViewModel>> AssignCategoryToUser(AssingCategoryOrRoleToUserViewModel request)
         {
-           var isUserExist = await _userManager.FindByIdAsync(request.UserId);
-            if(isUserExist != null)
-            {
-                var category = _context.Categories.Where(_ => _.Id.ToString() == request.CategoryId).FirstOrDefault();
-                if(category != null)
-                {
-                    var oldRecord = await _context.UserCategories.Where(x => x.UserId == isUserExist.Id).FirstOrDefaultAsync();
-                    if(oldRecord != null)
-                    {
-                        _context.Remove(oldRecord);
-                    }
-                    _context.UserCategories.Add(new AppUserCategory()
-                    {
-                        UserId = request.UserId,
-                        CategoryId = Guid.Parse(request.CategoryId)
-                    });
-                }
-
-                var role = await _roleManager.FindByIdAsync(request.RoleId);
-                if (role != null)
-                {
-                    var userRoles = await _userManager.GetRolesAsync(isUserExist);
-                    if(userRoles.Count == 0)
-                    {
-                        await _userManager.AddToRoleAsync(isUserExist, role.Name);
-                    }
-                    else
-                    {
-                        await _userManager.RemoveFromRolesAsync(isUserExist, userRoles);
-                        await _userManager.AddToRoleAsync(isUserExist, role.Name);
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                return Response<AppUserViewModel>.Success(200);
-            }
-
-            return Response<AppUserViewModel>.Fail("There is no user mathed given id",200,true);
+            var result = await _userDal.AssignCategoryToUserAsync(request);
+            return result;
         }
         public async Task<Response<List<AppUserViewModel>>> GetAllUsers()
         {
-           //databasede userCategory üzerinde herhangi bir kayıt yok. Tüm Kullanıcıları kategorileriyle birlikte al.
-           var users = await _context.Users.Select(_ => new AppUserViewModel()
-           {
-                Id = _.Id,
-                Name = _.Name,
-                Surname = _.Surname,
-                Phone = _.Phone,
-                Image = _.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(_.Image),
-                HomeLand = _.HomeLand,
-                Email = _.Email,
-                BirthDate = _.BirthDate,
-                IsSubcriber = _.IsSubscriber,
-                UserName = _.UserName,
-                UserCategory = _context.UserCategories.Where(x => x.UserId == _.Id).Select(x => new CategoryViewModel()
-                {
-                    Id = x.Category.Id.ToString(),
-                    Name = x.Category.Name
-                }).FirstOrDefault(),
-                Roles = _userManager.GetRolesAsync(_).Result.ToList()
-               
-            }).ToListAsync();
+
+            var users = await _userDal.GetAllUsersWithCategoryAndRole();
 
             return Response<List<AppUserViewModel>>.Success(users,200);
         }
 
-        public async Task<Response<NoDataViewModel>> ApproveUsersAccount(string userId)
+        public async Task<Response<NoDataViewModel>> ApproveUsersAccount(ApproveUserRequestModel request)
         {
-            var isUserExist = await _userManager.FindByIdAsync(userId);
-            if (isUserExist == null)
-            {
-                return Response<NoDataViewModel>.Fail("There is no user matched given id.", 404, true);
-            }
-
-            isUserExist.IsSubscriber = true;
-            await _context.SaveChangesAsync();
-
+            var result = _approveUserDal.ApproveUserAsync(request);
             return Response<NoDataViewModel>.Success(204);
         }
         public async Task<Response<NoDataViewModel>> UpdateUser(AppUserUpdateRequestModel request)

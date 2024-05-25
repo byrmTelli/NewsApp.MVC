@@ -20,29 +20,23 @@ namespace NewsApp.SERVICE.Services.Concrete
 {
     public class PostService:IPostService
     {
-        private readonly AppDbContext _context;
         private readonly IPostDal _postDal;
 
-        public PostService(AppDbContext context,IPostDal postDal)
+        public PostService(IPostDal postDal)
         {
-            _context = context;
             _postDal = postDal;
         }
 
         
         public async Task<Response<NoDataViewModel>>Delete(string id)
         {
-            var isPostExist = await _context.Posts.Where(_ => _.Id.ToString() == id).FirstOrDefaultAsync();
-            if(isPostExist == null)
-            {
-                return Response<NoDataViewModel>.Fail("There is no post matched given id value", 404,true);
-            }
-
-            _context.Remove(isPostExist);
-            await _context.SaveChangesAsync();
-
-            return Response<NoDataViewModel>.Success(204);
-
+            var result = await _postDal.Delete(id);
+            return result;
+        }
+        public async Task<Response<NoDataViewModel>> DeletePermanently(string postId)
+        {
+            var result = await _postDal.DeletePermanently(postId);
+            return result;
         }
         public async Task<Response<List<PostViewModel>>> GettAllPosts()
         {
@@ -50,66 +44,25 @@ namespace NewsApp.SERVICE.Services.Concrete
 
             return Response<List<PostViewModel>>.Success(allNews,200);
         }
-        public async Task<PostViewModel> GetSingleNewsById(string id)
+        public async Task<Response<PostViewModel>> GetSinglePostById(string postId)
         {
-            var news = await _context.Posts.FirstOrDefaultAsync(_ => _.Id.ToString() == id);
-
-            if (news == null)
-            {
-                throw new ArgumentNullException(nameof(news), "Haber bulunamadı.");
-            }
-            var category = await _context.Categories.Where(_ => _.Id == news.CategoryId).Select(_ => new CategoryViewModel() { Name = _.Name }).FirstOrDefaultAsync();
-            var creator = await _context.Users.Where(_ => _.Id == news.CreatorId).Select(_ => new AppUserViewModel() {
-                Id = _.Id,
-                Name = _.Name,
-                Surname = _.Surname,
-                BirthDate = _.BirthDate
-            })
-                .FirstOrDefaultAsync();
-            return new PostViewModel
-            {
-                Id = news.Id.ToString(),
-                Title = news.Title,
-                Creator =creator,
-                Category = category,
-                Content = news.Content,
-                CreatedAt = news.CreatedAt,
-                Image = news.Image
-            };
+            var result = await _postDal.GetPostById(postId);
+            return result;
         }
         public async Task<Response<NoDataViewModel>> Create(PostRequestModel model)
         {
-            var newsModel = new Post()
-            {
-                Title = model.Title,
-                CategoryId = Guid.Parse(model.CategoryId),
-                Content = model.Content,
-                CreatorId = model.CreatorId,
-                CreatedAt = DateTime.Now,
-                Image = model.Image,
-                IsPrivateOnly = model.IsPrivateOnly,
-                IsPublished = model.IsPublished
-            };
-
-            _context.Posts.Add(newsModel);
-            await _context.SaveChangesAsync();
-
-            return Response<NoDataViewModel>.Success(204);
+            var result = await _postDal.Create(model);
+            return result;
         }
-
         public async Task<Response<ManageSingleUserViewModel>> GetAllPostsOfUser(string userId)
         {
             var userPosts = await _postDal.GetAllPostsOfUser(userId);
-
-
             return userPosts;
         }
-
         public async Task<Response<List<PostViewModel>>> FilterPost(Func<PostViewModel, bool> exp)
         {
             throw new ArgumentException();
         }
-
         public async Task<Response<List<PostViewModel>>> GetPostsByCategory(string categoryName)
         {
             var posts = await  _postDal.GetPostsByCategory(categoryName);
@@ -121,7 +74,6 @@ namespace NewsApp.SERVICE.Services.Concrete
 
             return Response<List<PostViewModel>>.Success(posts, 200);
         }
-
         public async Task<Response<List<PostViewModel>>> GetUnPublishedPostsByCategory(string categoryName)
         {
             var posts =await _postDal.GetUnPublishedPostsByCategory(categoryName);
@@ -133,18 +85,16 @@ namespace NewsApp.SERVICE.Services.Concrete
 
             return Response<List<PostViewModel>>.Success(posts, 200);
         }
-
         public async Task<Response<NoDataViewModel>> ApprovePost(string postId)
         {
-            var isPostExist =await _context.Posts.Where(_ => _.Id.ToString() == postId).FirstOrDefaultAsync();
-            if (isPostExist == null)
-            {
-                return Response<NoDataViewModel>.Fail("There is no post matched given id value", 404, true);
-            }
+            var result =await _postDal.ApprovePost(postId);
+            return result;
+        }
 
-            isPostExist.IsPublished = true;
-            await _context.SaveChangesAsync();
-            return Response<NoDataViewModel>.Success(200);
+        public async Task<Response<NoDataViewModel>> UpdatePost(PostRequestModel model)
+        {
+            var result = await _postDal.Update(model);
+            return result;
         }
     }
 }

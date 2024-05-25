@@ -2,6 +2,7 @@
 using NewsApp.CORE.ViewModels.AdminPageViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
 using NewsApp.CORE.ViewModels.PostViewModels;
+using NewsApp.CORE.ViewModels.UserViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace NewsApp.SERVICE.Services.Abstract
         Task<Response<ManageSingleUserViewModel>> GetSingleUser(string id);
         Task<Response<NoDataViewModel>> RemoveCategory(string categoryId);
         Task<Response<NoDataViewModel>> ActivateCateory(string categoryId);
+        Task<Response<List<AppUserViewModel>>> GetAllUsers();
     }
 }

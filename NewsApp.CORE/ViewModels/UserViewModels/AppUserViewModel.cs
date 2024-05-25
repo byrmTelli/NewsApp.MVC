@@ -16,6 +16,7 @@ namespace NewsApp.CORE.ViewModels.UserViewModels
         public string? Name { get; set; }
         [Display(Name = "Soyisim")]
         public string? Surname { get; set; }
+
         public string? Phone { get; set; }
         [Display(Name="Resim")]
         public string? Image { get; set; }

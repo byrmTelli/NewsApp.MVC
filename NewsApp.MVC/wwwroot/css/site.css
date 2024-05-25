@@ -26,6 +26,19 @@ a{
     color:black;
 }
 
+.login-button{
+    font-size:16px;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+
+.privacy-policy-button{
+    background-color:white;
+    border:none;
+}
 
 ::-webkit-scrollbar {
     width: 10px;
@@ -82,6 +95,9 @@ a{
     height:100%;
     margin-top:20px;
     padding:5px;
+}
+.create-form-label {
+    min-width: 70px;
 }
 
 .custom-input{
@@ -141,11 +157,11 @@ a{
 .profile-image {
     width: 100px;
     height: 100px;
-
-#editor{
-    height:300px;
 }
 
+.post-content-area{
+    min-height:500px;
+}
 
 .section-item:hover{
     border-bottom: 1px solid black;

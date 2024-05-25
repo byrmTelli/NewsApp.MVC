@@ -21,6 +21,8 @@ namespace NewsApp.DAL.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<AppUserCategory> UserCategories { get; set; }
+        public DbSet<UserApproveRecord> UserApproveRecords { get; set; }
+        public DbSet<PostApproveRecord> PostApproveRecords { get; set; }
         #endregion
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

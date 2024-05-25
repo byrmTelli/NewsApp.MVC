@@ -22,6 +22,7 @@
             </div>
         }
         <form asp-controller="User" asp-action="UpdateUser" method="post" enctype="multipart/form-data">
+            <input asp-for="@Model.UserName" value="@Model.UserName" hidden/>
             <div class="d-flex align-items-center justify-content-between">
                 <div class="">
                     <h4 class="mt-4">Kullanıcı Bilgileri</h4>
@@ -37,6 +38,7 @@
                         <label asp-for="Email" class="col-md-3 col-form-label fw-bold"></label>
                         <div class="col-md-8">
                             <p class="mt-1">@Model.Email</p>
+                            <input asp-for="Email" value="@Model.Email" hidden />
                             <span class="text-danger" asp-validation-for="Email"></span>
                         </div>
                     </div>
@@ -69,7 +71,7 @@
             <div class="row mb-3">
                 <label asp-for="BirthDate" class="col-md-2 col-form-label fw-bold"></label>
                 <div class="col-md-8">
-                    <input class="form-control" asp-for="BirthDate" autocomplete="off" value="@Model.BirthDate">
+                    <input class="form-control" asp-for="BirthDate" autocomplete="off" type="date" value="@Model.BirthDate">
                     <span asp-validation-for="BirthDate" class="text-danger"></span>
                 </div>
             </div>
@@ -87,6 +89,7 @@
                     <span asp-validation-for="HomeLand" class="text-danger"></span>
                 </div>
             </div>
+            <input hidden asp-for="UserName" value="@Model.UserName" />
             <input hidden asp-for="Id" value="@Model.Id" />
         </form>
     </div>

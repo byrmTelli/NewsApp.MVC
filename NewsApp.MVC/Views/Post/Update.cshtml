@@ -1,8 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Create";
+﻿﻿@using System.Security.Claims
+@{
+    ViewData["Title"] = "Update";
 }
 
-@model PostRequestModel
+@model PostViewModel
 
 @section Scripts
 {
@@ -11,12 +12,28 @@
 
 <div class="row p-4 mt-4">
     <div class="col bg-light rounded-3 shadow pt-4 px-4">
+        <div class="col d-flex align-items-center justify-content-between p-2">
         <h4>Yeni Yazı</h4>
+            <div class="d-flex align-items-center justify-content-end mt-2 gap-2">
+                <form asp-controller="Post" asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="@Model.Id" value="@Model.Id" name="postId" />
+                    <button type="submit" class="btn btn-danger">Sil</button>
+                </form>
+                @if(User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value =="admin"))
+                {
+                    <form asp-controller="Post" asp-action="DeletePermanently" method="post">
+                        <input type="hidden" asp-for="@Model.Id" value="@Model.Id" name="postId" />
+                        <button type="submit" class="btn btn-warning">Kalıcı Sil</button>
+                    </form>
+                }
+            </div>
+        </div>
         <hr />
         <div class="row">
-            <form asp-controller="Post" asp-action="Create" method="post">
-                <input type="hidden" asp-for="CreatorId" value="@ViewBag.CurrentUserId" />
-                <input type="hidden" asp-for="Id" value="0" />
+            <form asp-controller="Post" asp-action="Update" method="post">
+
+                <input type="hidden" asp-for="@Model.Creator.Id" value="@ViewBag.CurrentUserId" name="CreatorId" />
+                <input type="hidden" asp-for="@Model.Id" value="@Model.Id" name="Id" />
                 <div class="row">
                     <div class="col-md-7 py-4">
                         <div class="form-group d-flex flex-column gap-2">
@@ -34,29 +51,23 @@
                         <div class="form-group">
                             <div class="d-flex gap-2 align-items-center justify-content-center mt-2">
                                 <label asp-for="Title" class="create-form-label fw-bold">Başlık</label>
-                                <input asp-for="Title" class="form-control" />
+                                <input asp-for="Title" name="Title" class="form-control" />
                             </div>
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
                         <div class="form-group mt-3">
                             <div class="d-flex gap-2 align-items-center justify-content-center">
                                 <label asp-for="Image" class="create-form-label fw-bold"></label>
-                                <input asp-for="Image" class="form-control" />
+                                <input asp-for="Image" name="Image" class="form-control" />
                             </div>
                             <span asp-validation-for="Image" class="text-danger"></span>
                         </div>
                         <div class="form-group mt-3">
                             <div class="d-flex gap-2 align-items-center justify-content-center">
-                                <label asp-for="CategoryId" class="create-form-label fw-bold">Kategori</label>
-                                <select asp-for="CategoryId" class="form-control">
-                                    <option value="">-- Select Category --</option>
-                                    @foreach (var category in ViewBag.Categories)
-                                    {
-                                        <option value="@category.Id">@category.Name</option>
-                                    }
-                                </select>
+                                <label asp-for="@Model.Category.Id" class="create-form-label fw-bold">Kategori</label>
+                                <input asp-for="@Model.Category.Id" name="CategoryId" value="@Model.Category.Name" readonly class="form-control" />
                             </div>
-                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            <span asp-validation-for="@Model.Category.Id" class="text-danger"></span>
                         </div>
                         <div class="mt-4">
                             <p class="text-justify">Oluşturduğunuz yazı, <span class="fw-bold text-primary">yöneticiniz</span> ya da <span class="fw-bold text-primary">Uygulama Yöneticisi</span> tarafından onaylanmadan yayına alınmayacaktır.</p>
@@ -64,10 +75,10 @@
                         <div class="d-flex align-items-center justify-content-between mt-3">
                             <div class="form-group">
                                 <div class="d-flex align-items-center justify-content-center gap-4">
-                                    <label asp-for="IsPrivateOnly" class="create-form-label text-warning-0 fw-bolder">Abonelere Özel</label>
-                                    <input type="checkbox" name="IsPrivateOnly" asp-for="IsPrivateOnly" class="form-check-input">
+                                    <label asp-for="@Model.IsSubscriberOnly" class="create-form-label text-warning-0 fw-bolder">Abonelere Özel</label>
+                                    <input type="checkbox" name="IsPrivateOnly" asp-for="@Model.IsSubscriberOnly" class="form-check-input">
                                 </div>
-                                <span asp-validation-for="IsPrivateOnly" class="text-danger"></span>
+                                <span asp-validation-for="@Model.IsSubscriberOnly" class="text-danger"></span>
                             </div>
                             <button type="submit" class="btn btn-primary">Oluştur</button>
                         </div>

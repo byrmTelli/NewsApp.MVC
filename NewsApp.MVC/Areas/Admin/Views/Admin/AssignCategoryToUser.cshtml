@@ -1,78 +1,86 @@
-﻿@model List<AppUserViewModel>
+﻿@model Response<List<AppUserViewModel>>
+
 <div class="row">
-    <h4>Rol ve Yetki Paneli</h4>
-    <hr />
+    <div class="pt-2 pb-4">
+        <h4 class="fw-bold">Rol ve Yetki Paneli</h4>
+    </div>
     <div class="row">
         <div class="col">
-            <table class="table table-striped">
+            <hr />
+            <table class="table table-striped" id="datatable">
                 <thead>
                     <tr>
-                        <th colspan="2">Kullanıcı</th>
-                        <th colspan="4">Rol ve Departman Bilgisi</th>
-                        <th colspan="4" class="text-center">Atama</th>
+                        <th>Kullanıcı</th>
+                        <th>Rol ve Departman Bilgisi</th>
+                        <th class="text-center">Atama</th>
                     </tr>
                 </thead>
                 <tbody>
                     @{
-                        foreach (var data in Model)
+                        foreach (var data in Model.Data)
                         {
-                            <tr>
-                                <td colspan="2">@data.Name @data.Surname</td>
-                                <td colspan="4">
-                                    @foreach (var role in data.Roles)
-                                    {
-                                        if(role == "admin")
+                            @if(data.IsSubcriber == true)
+                            {
+                                <tr>
+                                    <td>@data.Name @data.Surname</td>
+                                    <td>
+                                        @foreach (var role in data.Roles)
                                         {
-                                            <span class="text-capitalize text-white bg-danger p-1 px-2 text-center rounded">@role</span>
-                                        }else if(role == "director")
-                                        {
-                                            <span class="text-capitalize bg-warning p-1 px-2 text-white rounded">@role</span>
+                                            if (role == "admin")
+                                            {
+                                                <span class="text-capitalize text-white bg-danger p-1 px-2 text-center rounded">@role</span>
+                                            }
+                                            else if (role == "director")
+                                            {
+                                                <span class="text-capitalize bg-warning p-1 px-2 text-white rounded">@role</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-capitalize bg-primary p-1 px-2 text-white rounded">@role</span>
+                                            }
                                         }
-                                        else
+                                        @if (@data.UserCategory != null)
                                         {
-                                            <span class="text-capitalize bg-primary p-1 px-2 text-white rounded">@role</span>
+                                            <span class="text-capitalize bg-success text-white p-1 px-2 rounded">@data.UserCategory?.Name</span>
                                         }
-                                    }
-                                    @if(@data.UserCategory != null){
-                                    <span class="text-capitalize bg-success text-white p-1 px-2 rounded">@data.UserCategory?.Name</span>
-                                    }
-                                </td>
+                                    </td>
 
-                                <td colspan="4">
-                                    <div class="row">
-                                        <form asp-controller="Admin" asp-action="AssignCategoryToUser" method="post">
-                                            <input hidden name="UserId" value="@data.Id" />
-                                            <div class="row">
-                                                <div class="col d-flex align-items-center justify-content-center gap-2">
-                                                    <label>Departman</label>
-                                                    <select class="d-flex form-select" name="CategoryId">
-                                                        <option value="">Category Seçiniz</option>
-                                                        @foreach (var category in ViewBag.AllCategories)
-                                                        {
-                                                            <option value="@category.Id">@category.Name</option>
-                                                        })
-                                                    </select>
-                                                </div>
+                                    <td>
+                                        <div class="row">
+                                            <form asp-controller="Admin" asp-action="AssignCategoryToUser" method="post">
+                                                <input hidden name="UserId" value="@data.Id" />
+                                                <div class="row">
+                                                    <div class="col d-flex align-items-center justify-content-center gap-2">
+                                                        <label>Departman</label>
+                                                        <select class="d-flex form-select" name="CategoryId">
+                                                            <option value="">Category Seçiniz</option>
+                                                            @foreach (var category in ViewBag.AllCategories)
+                                                            {
+                                                                <option value="@category.Id">@category.Name</option>
+                                                            })
+                                                        </select>
+                                                    </div>
 
-                                                <div class="col d-flex align-items-center justify-content-center gap-2">
-                                                    <label>Rol</label>
-                                                    <select class="d-flex form-select" name="RoleId">
-                                                        <option value="">Role Seçiniz</option>
-                                                        @foreach (var role in ViewBag.AllRoles)
-                                                        {
-                                                            <option value="@role.Id">@role.RoleName</option>
-                                                        })
-                                                    </select>
-                                                </div>
+                                                    <div class="col d-flex align-items-center justify-content-center gap-2">
+                                                        <label>Rol</label>
+                                                        <select class="d-flex form-select" name="RoleId">
+                                                            <option value="">Role Seçiniz</option>
+                                                            @foreach (var role in ViewBag.AllRoles)
+                                                            {
+                                                                <option value="@role.Id">@role.RoleName</option>
+                                                            })
+                                                        </select>
+                                                    </div>
 
-                                                <div class="col d-flex">
-                                                    <input type="submit" class="btn btn-success" />
+                                                    <div class="col d-flex">
+                                                        <input type="submit" class="btn btn-success" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
                         }
 
                     }

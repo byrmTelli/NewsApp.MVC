@@ -26,13 +26,15 @@ namespace NewsApp.SERVICE.Services.Concrete
         private readonly IAppUserDal _appUserDal;
         private readonly IPostDal _postDal;
         private readonly ICategoryDal _categoryDal;
+        private readonly IApproveUserDal _approveUserDal;
 
         public AdminService(
             AppDbContext dbContext,
             UserManager<AppUser> userManager,
             IAppUserDal appUserDal,
             IPostDal postDal,
-            ICategoryDal categoryDal
+            ICategoryDal categoryDal,
+            IApproveUserDal approveUserDal
             )
         {
             _dbContext = dbContext; 
@@ -40,6 +42,7 @@ namespace NewsApp.SERVICE.Services.Concrete
             _appUserDal = appUserDal;
             _postDal = postDal;
             _categoryDal = categoryDal;
+            _approveUserDal = approveUserDal;
         }
 
         public async Task<Response<NoDataViewModel>> ActivateCateory(string categoryId)
@@ -52,6 +55,13 @@ namespace NewsApp.SERVICE.Services.Concrete
             await _appUserDal.DeleteUser(id);
             return Response<NoDataViewModel>.Success(204);
         }
+
+        public async Task<Response<List<AppUserViewModel>>> GetAllUsers()
+        {
+            var result =await _appUserDal.GetAllUsersWithCategoryAndRole();
+            return Response<List<AppUserViewModel>>.Success(result,200);
+        }
+
         public async Task<Response<DashboardViewModel>> GetDashboardData()
         {
             var writers = await _userManager.GetUsersInRoleAsync("writer");
@@ -71,6 +81,10 @@ namespace NewsApp.SERVICE.Services.Concrete
             var barChartTitles = postCountsByCategory.Select(x => x.Category).ToList();
             var barChartData = postCountsByCategory.Select(x => x.Count).ToList();
 
+            var MonthlyUserCount = await _appUserDal.NewUserCountMontly();
+            var MonthlyPostApprovalCount = await _postDal.GetMontlyApprovedPostCount();
+            var approveUserRecords = await _approveUserDal.GetListOfApproveRecords();
+
             var result = new DashboardViewModel()
             {
                 UserCount = userCount,
@@ -80,7 +94,10 @@ namespace NewsApp.SERVICE.Services.Concrete
                 BarChartTitles = barChartTitles,
                 BarChartData = barChartData,
                 PieChartTitles = barChartTitles,
-                PieChartData = barChartData
+                PieChartData = barChartData,
+                ApproveUserRecords = approveUserRecords.Data,
+                MontlyUserCount = MonthlyUserCount,
+                MontlyPostApprovalCount = MonthlyPostApprovalCount
             };
 
             return Response<DashboardViewModel>.Success(result, 200);
@@ -130,7 +147,6 @@ namespace NewsApp.SERVICE.Services.Concrete
             return Response<NoDataViewModel>.Success(200);
 
         }
-
         public async Task<Response<NoDataViewModel>> RemoveCategory(string categoryId)
         {
             return await _categoryDal.RemoveCategory(categoryId);

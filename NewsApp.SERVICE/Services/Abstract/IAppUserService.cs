@@ -1,4 +1,5 @@
 ﻿using NewsApp.CORE.Generics;
+using NewsApp.CORE.RequestModels.AdminRequestModels;
 using NewsApp.CORE.RequestModels.UserRequestModels;
 using NewsApp.CORE.ViewModels.AdminPageViewModels.AssignCategoryRoleViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
@@ -15,7 +16,7 @@ namespace NewsApp.SERVICE.Services.Abstract
     {
         Task<Response<AppUserViewModel>> AssignCategoryToUser(AssingCategoryOrRoleToUserViewModel request);
         Task<Response<List<AppUserViewModel>>> GetAllUsers();
-        Task<Response<NoDataViewModel>> ApproveUsersAccount(string useId);
+        Task<Response<NoDataViewModel>> ApproveUsersAccount(ApproveUserRequestModel request);
         Task<Response<NoDataViewModel>> UpdateUser(AppUserUpdateRequestModel request);
         Task<Response<AppUserViewModel>> GetSingleUserById(string userId);
         Task<Response<List<AppUserViewModel>>> GetDirectorsOfCategory(string categoryId);

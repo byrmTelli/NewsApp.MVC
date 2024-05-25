@@ -36,12 +36,6 @@ namespace NewsApp.MVC.Controllers
             _fileProvider = fileProvider;
             _categoryService = categoryService;
         }
-        [HttpGet("/linq")]
-        public async Task<IActionResult> GetUsersWithLinq()
-        {
-            var allUsers = await _appUserService.GetAllUsersWithLinq();
-            return View(allUsers.Data);
-        }
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -58,7 +52,7 @@ namespace NewsApp.MVC.Controllers
             {
                 Email = currentUser.Email,
                 UserName = currentUser.UserName,
-                Phone = currentUser.PhoneNumber,
+                Phone = currentUser.Phone,
                 Name = currentUser.Name,
                 Surname = currentUser.Surname,
                 HomeLand =currentUser.HomeLand,
