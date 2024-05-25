@@ -89,5 +89,39 @@ namespace NewsApp.DAL.Concrete
                 }
             }
         }
+
+        public async Task<Response<NoDataViewModel>> ResetUsersCategory(string userId)
+        {
+            using (var context =new AppDbContext())
+            {
+                try
+                {
+
+                    var userResult = await (from user in context.Users
+                                            where user.Id == userId
+                                            select user
+                                            ).FirstOrDefaultAsync();
+
+                    if(userResult != null) {
+                        var categoryResult = await (from userCategory in context.UserCategories
+                                                    where userCategory.UserId == userId
+                                                    select userCategory).FirstOrDefaultAsync();
+
+                        userResult.UserCategoryId = null;
+                        context.Remove(categoryResult);
+                        await context.SaveChangesAsync();
+
+
+                        return Response<NoDataViewModel>.Success(200);
+                    }
+
+                    return Response<NoDataViewModel>.Fail("İlgili kayıt bulunamadı.", 404, true);
+
+                }catch(Exception ex)
+                {
+                    return Response<NoDataViewModel>.Fail("Bir hata meydana geldi.Hata: " + ex, 500, true);
+                }
+            }
+        }
     }
 }

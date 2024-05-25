@@ -22,7 +22,7 @@ namespace NewsApp.SERVICE.Services.Abstract
         Task<Response<NoDataViewModel>> Create(PostRequestModel model);
         Task<Response<ManageSingleUserViewModel>> GetAllPostsOfUser(string userId);
         Task<Response<List<PostViewModel>>> GetUnPublishedPostsByCategory(string categoryName);
-        Task<Response<NoDataViewModel>> ApprovePost(string postId);
+        Task<Response<NoDataViewModel>> ApprovePost(string postId,string userId);
         Task<Response<NoDataViewModel>> UpdatePost(PostRequestModel model);
     }
 }

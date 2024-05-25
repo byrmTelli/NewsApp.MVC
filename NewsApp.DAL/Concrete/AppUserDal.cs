@@ -179,7 +179,7 @@ namespace NewsApp.DAL.Concrete
                 {
 
                     var result = await (from user in context.Users
-                                  where user.CreatedDate.Month == DateTime.Now.Month
+                                  where user.CreatedDate.Month == DateTime.Now.Month && user.IsDeleted == false && user.IsSubscriber == true
                                   select new AppUserViewModel()).ToListAsync();
                     if(result == null)
                     {

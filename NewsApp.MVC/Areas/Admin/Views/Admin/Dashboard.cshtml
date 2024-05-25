@@ -146,33 +146,54 @@
 
 
 
-<div class="modal fade bd-example-modal-xl modal-2" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg modal-2" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content p-2">
-            <h5>Onaylanan Yazı Kayıları</h5>
+        <div class="modal-content">
+            <div class="col bg-light-blue-1 text-white p-3">
+                <h5>Yazı Onay Kayıları</h5>
+            </div>
             <hr />
-            <table id="datatable" class="table table-striped table-hover" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Onaylayan</th>
-                        <th>Onaylanan</th>
-                        <th>Onay Tarihi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var record in Model.ApproveUserRecords)
-                    {
+            <div class="col p-3">
+                <table id="datatable" class="table table-striped table-hover" style="width:100%">
+                    <thead>
                         <tr>
-                            <td>@record.ApproverName @record.ApproverSurname</td>
-                            <td>@record.UserMail</td>
-                            <td>@record.ApprovalDate</td>
+                            <th>Onaylayan</th>
+                            <th>Kategori</th>
+                            <th>Adı</th>
+                            <th>Onay Tarihi</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var record in Model.ApprovePostRecords)
+                        {
+                            <tr>
+                                <td>@record.ApproverName @record.ApproverSurname</td>
+                                <td>@record.CategoryName</td>
+                                <td>
+                                    @if (record.Title.Length > 20)
+                                    {
+                                        @record.Title.Substring(0, 20)
+                                        <span>...</span>
+                                    }
+                                    else
+                                    {
+                                        @record.Title
+                                    }
+                                </td>
+                                <td>@record.ApprovalDate</td>
+                                <td>
+                                    <a asp-controller="Home" asp-action="Detail" asp-route-id="@record.PostId">İncele</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

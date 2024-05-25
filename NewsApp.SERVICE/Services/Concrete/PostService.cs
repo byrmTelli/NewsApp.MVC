@@ -21,10 +21,12 @@ namespace NewsApp.SERVICE.Services.Concrete
     public class PostService:IPostService
     {
         private readonly IPostDal _postDal;
+        private readonly IApprovePostDal _approvePostDal;
 
-        public PostService(IPostDal postDal)
+        public PostService(IPostDal postDal, IApprovePostDal approvePostDal)
         {
             _postDal = postDal;
+            _approvePostDal = approvePostDal;
         }
 
         
@@ -85,9 +87,9 @@ namespace NewsApp.SERVICE.Services.Concrete
 
             return Response<List<PostViewModel>>.Success(posts, 200);
         }
-        public async Task<Response<NoDataViewModel>> ApprovePost(string postId)
+        public async Task<Response<NoDataViewModel>> ApprovePost(string postId,string userId)
         {
-            var result =await _postDal.ApprovePost(postId);
+            var result = await _approvePostDal.ApprovePostAsync(postId,userId);
             return result;
         }
 

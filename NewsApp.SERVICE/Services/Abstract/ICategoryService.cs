@@ -16,5 +16,6 @@ namespace NewsApp.SERVICE.Services.Abstract
         Task<CategoryViewModel> GetCategoryById(string id);
         Task<CategoryViewModel> GetUsersCategory(string id);
         Task<Response<NoDataViewModel>> CreateCategory(CategoryRequestModel request);
+        Task<Response<NoDataViewModel>> ResetUsersCategoryAndRole(string userId);
     }
 }

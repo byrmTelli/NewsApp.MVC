@@ -11,6 +11,7 @@
         public List<int> BarChartData { get; set; }
         public List<string> BarChartTitles { get; set; }
         public List<ApproveUserViewModel> ApproveUserRecords { get; set;}
+        public List<ApprovePostViewModel> ApprovePostRecords { get; set; }
         public int MontlyUserCount { get; set; }
         public int MontlyPostApprovalCount { get; set; }
     }

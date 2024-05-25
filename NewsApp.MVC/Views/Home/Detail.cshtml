@@ -16,12 +16,15 @@
                     <p class="text-muted">@Model.CreatedAt</p>
                 </div>
                 @{
-                    if (ViewData["CurrentUserId"].ToString() == Model.Creator.Id
-                    || (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin") || (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "director") && ViewData["CurrentUserCategoryId"].ToString().ToUpper() == Model.Category.Id)))
+                    if (User.Identity.IsAuthenticated)
                     {
-                        <div>
-                            <a class="btn btn-primary" asp-controller="Post" data-toggle="tooltip" title="Güncelle" asp-action="Update" asp-route-postId="@Model.Id"><i class="fa-solid fa-square-pen" style="font-size:24px;"></i></a>
-                        </div>
+                        if (ViewData["CurrentUserId"].ToString() == Model.Creator.Id
+                        || (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "admin") || (User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == "director") && ViewData["CurrentUserCategoryId"].ToString().ToUpper() == Model.Category.Id)))
+                        {
+                            <div>
+                                <a class="btn btn-primary" asp-controller="Post" data-toggle="tooltip" title="Güncelle" asp-action="Update" asp-route-postId="@Model.Id"><i class="fa-solid fa-square-pen" style="font-size:24px;"></i></a>
+                            </div>
+                        }
                     }
                 }
             </div>

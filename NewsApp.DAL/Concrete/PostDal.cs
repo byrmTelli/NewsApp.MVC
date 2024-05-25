@@ -233,7 +233,7 @@ namespace NewsApp.DAL.Concrete
                 {
 
                     var result = await (from post in context.Posts
-                                        where post.CreatedAt.Month == DateTime.Now.Month
+                                        where post.CreatedAt.Month == DateTime.Now.Month && post.IsPublished == true
                                         select post
                                        ).ToListAsync();
                     if(result == null)

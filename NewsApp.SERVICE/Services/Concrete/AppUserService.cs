@@ -164,5 +164,6 @@ namespace NewsApp.SERVICE.Services.Concrete
                 return Response<List<AppUserViewModel>>.Fail("Bir hata ile karşılaşıldı. Hata: " + ex, 500, true);
             }
         }
+
     }
 }

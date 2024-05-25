@@ -27,6 +27,7 @@ namespace NewsApp.SERVICE.Services.Concrete
         private readonly IPostDal _postDal;
         private readonly ICategoryDal _categoryDal;
         private readonly IApproveUserDal _approveUserDal;
+        private readonly IApprovePostDal _approvePostDal;
 
         public AdminService(
             AppDbContext dbContext,
@@ -34,7 +35,8 @@ namespace NewsApp.SERVICE.Services.Concrete
             IAppUserDal appUserDal,
             IPostDal postDal,
             ICategoryDal categoryDal,
-            IApproveUserDal approveUserDal
+            IApproveUserDal approveUserDal,
+            IApprovePostDal approvePostDal
             )
         {
             _dbContext = dbContext; 
@@ -43,6 +45,7 @@ namespace NewsApp.SERVICE.Services.Concrete
             _postDal = postDal;
             _categoryDal = categoryDal;
             _approveUserDal = approveUserDal;
+            _approvePostDal = approvePostDal;
         }
 
         public async Task<Response<NoDataViewModel>> ActivateCateory(string categoryId)
@@ -84,7 +87,7 @@ namespace NewsApp.SERVICE.Services.Concrete
             var MonthlyUserCount = await _appUserDal.NewUserCountMontly();
             var MonthlyPostApprovalCount = await _postDal.GetMontlyApprovedPostCount();
             var approveUserRecords = await _approveUserDal.GetListOfApproveRecords();
-
+            var approvePostRecords = await _approvePostDal.GetListOfApprovePosts();
             var result = new DashboardViewModel()
             {
                 UserCount = userCount,
@@ -96,6 +99,7 @@ namespace NewsApp.SERVICE.Services.Concrete
                 PieChartTitles = barChartTitles,
                 PieChartData = barChartData,
                 ApproveUserRecords = approveUserRecords.Data,
+                ApprovePostRecords = approvePostRecords.Data,
                 MontlyUserCount = MonthlyUserCount,
                 MontlyPostApprovalCount = MonthlyPostApprovalCount
             };

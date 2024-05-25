@@ -32,6 +32,13 @@ namespace NewsApp.SERVICE.Services.Concrete
             _categoryDal = categoryDal;
         }
 
+
+
+        public async Task<Response<NoDataViewModel>> ResetUsersCategoryAndRole(string userId)
+        {
+            var result = await _categoryDal.ResetUsersCategory(userId);
+            return result;
+        }
         public async Task<Response<NoDataViewModel>> CreateCategory(CategoryRequestModel request)
         {
             var isCategoryExist = await _appDbContext.Categories.Where(_ => _.Name.ToLower() == request.Name.ToLower()).FirstOrDefaultAsync();

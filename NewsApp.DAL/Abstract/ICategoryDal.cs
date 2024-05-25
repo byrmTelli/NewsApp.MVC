@@ -16,5 +16,6 @@ namespace NewsApp.DAL.Abstract
         Task<Response<NoDataViewModel>> RemoveCategory(string categoryId);
         Task<Response<NoDataViewModel>> ActiveCategory(string categoryId);
         Task<Response<List<CategoryViewModel>>> GetAllCategories();
+        Task<Response<NoDataViewModel>> ResetUsersCategory(string userId);
     }
 }

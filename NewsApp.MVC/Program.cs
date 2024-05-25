@@ -65,6 +65,7 @@ builder.Services.AddScoped<IPostDal, PostDal>();
 builder.Services.AddScoped<ICategoryDal, CategoryDal>();
 builder.Services.AddScoped<IUserRoleDal, UserRoleDal>();
 builder.Services.AddScoped<IApproveUserDal, ApproveUserDal>();
+builder.Services.AddScoped<IApprovePostDal, ApprovePostDal>();
 
 
 builder.Services.AddScoped<LoginUserExtensionFilter>();
