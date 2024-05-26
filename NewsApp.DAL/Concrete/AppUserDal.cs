@@ -104,8 +104,6 @@ namespace NewsApp.DAL.Concrete
                 return Response<AppUserViewModel>.Fail("Bir Hata Meydana geldi. Hata: " + ex, 500, true);
             }
         }
-
-
         public async Task<NoDataViewModel> DeleteUser(string id)
         {
             using (var context = new AppDbContext())
@@ -129,7 +127,6 @@ namespace NewsApp.DAL.Concrete
                 }
             }
         }
-
         public async Task<List<AppUserViewModel>> GetAllUsersWithCategoryAndRole()
         {
             using (var context = new AppDbContext())
@@ -169,8 +166,6 @@ namespace NewsApp.DAL.Concrete
                 }
             }
         }
-
-
         public async Task<int> NewUserCountMontly()
         {
             using (var context = new AppDbContext())
@@ -196,7 +191,6 @@ namespace NewsApp.DAL.Concrete
                 }
             }
         }
-
         public async Task<NoDataViewModel> ReActiveUser(string id)
         {
             using (var context = new AppDbContext())
