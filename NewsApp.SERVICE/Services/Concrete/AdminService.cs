@@ -21,7 +21,6 @@ namespace NewsApp.SERVICE.Services.Concrete
 {
     public class AdminService : IAdminService
     {
-        private readonly AppDbContext _dbContext;
         private readonly UserManager<AppUser> _userManager;
         private readonly IAppUserDal _appUserDal;
         private readonly IPostDal _postDal;
@@ -30,7 +29,6 @@ namespace NewsApp.SERVICE.Services.Concrete
         private readonly IApprovePostDal _approvePostDal;
 
         public AdminService(
-            AppDbContext dbContext,
             UserManager<AppUser> userManager,
             IAppUserDal appUserDal,
             IPostDal postDal,
@@ -39,7 +37,6 @@ namespace NewsApp.SERVICE.Services.Concrete
             IApprovePostDal approvePostDal
             )
         {
-            _dbContext = dbContext; 
             _userManager = userManager;
             _appUserDal = appUserDal;
             _postDal = postDal;
@@ -71,12 +68,11 @@ namespace NewsApp.SERVICE.Services.Concrete
             var writerCount = writers.Count();
             var managers = await _userManager.GetUsersInRoleAsync("director");
             var managerCount = managers.Count();
-            var users = await _dbContext.Users.ToListAsync();
+            var users = await _appUserDal.GetAllUsersWithCategoryAndRole();
             var userCount = users.Count();
-            var posts = await _dbContext.Posts.Include(x => x.Category).ToListAsync();
+            var posts = await _postDal.GetAllPosts();
             var postsCount = posts.Count();
 
-            // Kategorilere göre post sayılarını hesaplama
             var postCountsByCategory = posts.GroupBy(x => x.Category.Name)
                                              .Select(g => new { Category = g.Key, Count = g.Count() })
                                              .ToList();
@@ -113,37 +109,8 @@ namespace NewsApp.SERVICE.Services.Concrete
         }
         public async Task<Response<ManageUserViewModel>> ManageUsers()
         {
-            var writers = await _userManager.GetUsersInRoleAsync("writer");
-            var managers = await _userManager.GetUsersInRoleAsync("manager");
-            var usersWithRoles = await _dbContext.Users
-                .Select(user => new
-                {
-                    User = user,
-                    Roles = _userManager.GetRolesAsync(user).Result
-                })
-                .Select(data => new AppUserViewModel
-                {
-                    Id = data.User.Id,
-                    Name = data.User.Name,
-                    Surname = data.User.Surname,
-                    UserName = data.User.UserName,
-                    Phone = data.User.Phone,
-                    Email = data.User.Email,
-                    IsSubcriber = data.User.IsSubscriber,
-                    Roles = data.Roles.ToList(),
-                    IsDeleted = data.User.IsDeleted
-                })
-                .ToListAsync();
-
-
-            var manageUserViewModel = new ManageUserViewModel()
-            {
-                WriterCount = writers.Count,
-                ManagerCount = managers.Count,
-                TotalUser = usersWithRoles.Count,
-                UserList = usersWithRoles
-            };
-            return Response<ManageUserViewModel>.Success(manageUserViewModel, 200);
+            var result = await _appUserDal.ManagUsers();
+            return result;
         }
         public async Task<Response<NoDataViewModel>> ReActiveUser(string id)
         {

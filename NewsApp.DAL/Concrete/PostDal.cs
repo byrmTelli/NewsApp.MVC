@@ -64,6 +64,52 @@ namespace NewsApp.DAL.Concrete
                 }
             }
         }
+        public async Task<List<PostViewModel>> GetAllPosts()
+        {
+            using (var context = new AppDbContext())
+            {
+                try
+                {
+                    var result = await (from activePost in context.Posts
+                                        join postCategory in context.Categories on activePost.CategoryId equals postCategory.Id
+                                        where activePost.IsDeleted == false
+                                        && activePost.Creator.IsDeleted == false
+                                        && activePost.IsPublished == true
+                                        && postCategory.IsDeleted == false
+                                        select new PostViewModel()
+                                        {
+                                            Id = activePost.Id.ToString(),
+                                            Title = activePost.Title,
+                                            Content = activePost.Content,
+                                            CreatedAt = activePost.CreatedAt,
+                                            IsSubscriberOnly = activePost.IsPrivateOnly,
+                                            Image = activePost.Image,
+                                            Creator = new AppUserViewModel()
+                                            {
+                                                Id = activePost.Creator.Id.ToString(),
+                                                Name = activePost.Creator.Name,
+                                                Surname = activePost.Creator.Surname,
+                                                Phone = activePost.Creator.Phone,
+                                            },
+                                            Category = new CategoryViewModel()
+                                            {
+                                                Id = postCategory.Id.ToString(),
+                                                Name = postCategory.Name
+                                            }
+                                        }
+                                 ).ToListAsync();
+
+                    return result;
+
+
+                }
+                catch (Exception ex)
+                {
+                    return new List<PostViewModel>();
+                }
+            }
+
+        }
         public async Task<List<PostViewModel>> GetPostsByCategory(string categoryName)
         {
             using (var context = new AppDbContext())

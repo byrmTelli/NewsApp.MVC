@@ -183,7 +183,15 @@
                                 </td>
                                 <td>@record.ApprovalDate</td>
                                 <td>
-                                    <a asp-controller="Home" asp-action="Detail" asp-route-id="@record.PostId">İncele</a>
+                                    <a 
+                                        class="btn bg-light-blue-1 text-white"
+                                        data-toggle="tooltip"
+                                        title="İncele"
+                                        asp-controller="Home" 
+                                        asp-action="Detail"
+                                       asp-route-id="@record.PostId">
+                                       <i class="fa-solid fa-eye"></i>
+                                   </a>
                                 </td>
                             </tr>
                         }

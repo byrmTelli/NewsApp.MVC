@@ -61,7 +61,7 @@ namespace NewsApp.MVC.Controllers
                 UserCategory = userCategory
 
             };
-            //Image converting
+
             if (currentUser.Image != null)
             {
                 var image = currentUser.Image;
@@ -134,7 +134,7 @@ namespace NewsApp.MVC.Controllers
 
                 var updatedUserViewModel = await _appUserService.GetSingleUserById(currentUser.Id);
 
-                return RedirectToAction(nameof(UserController.UpdateUser));
+                return RedirectToAction(nameof(UserController.Index));
             }
 
             return RedirectToAction(nameof(UserController.UpdateUser));

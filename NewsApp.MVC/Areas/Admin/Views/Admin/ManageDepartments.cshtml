@@ -25,7 +25,6 @@
                 <th>Department</th>
                 <th>Durumu</th>
                 <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -43,10 +42,8 @@
                             <span class="text-success">Aktif</span>
                         }
                     </td>
-                    <td>
-                        <a asp-controller="Admin" asp-action="ManageDepartment" asp-route-departmentId="@item.Id" class="btn btn-outline-primary">Detay</a>
-                    </td>
                     <td class="d-flex align-items-center justify-content-center gap-1 p-2">
+                        <a asp-controller="Admin" asp-action="ManageDepartment" asp-route-departmentId="@item.Id" class="btn btn-outline-primary">Detay</a>
                         @if (item.IsDeleted == true)
                         {
                             <form asp-area="Admin" asp-controller="Admin" asp-action="ActivateCategory" method="post">

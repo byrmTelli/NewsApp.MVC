@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using NewsApp.CORE.DataAccess.EntityFramework;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.Generics;
+using NewsApp.CORE.RequestModels.UserRequestModels;
+using NewsApp.CORE.ViewModels.AdminPageViewModels;
 using NewsApp.CORE.ViewModels.AdminPageViewModels.AssignCategoryRoleViewModels;
 using NewsApp.CORE.ViewModels.CategoryViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
@@ -31,7 +33,103 @@ namespace NewsApp.DAL.Concrete
 
         }
 
+        public async Task<Response<NoDataViewModel>> UpdateUser(AppUserUpdateRequestModel request)
+        {
+            using (var context = new AppDbContext())
+            {
+                try
+                {
+                    var isUserExist = await _userManager.FindByIdAsync(request.Id);
+                    if (isUserExist == null)
+                    {
+                        return Response<NoDataViewModel>.Fail("There is user matched given id", 404, true);
+                    }
 
+                    if (request.Image != null)
+                    {
+                        byte[] pictureBytes;
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await request.Image.CopyToAsync(memoryStream);
+                            pictureBytes = memoryStream.ToArray();
+                            isUserExist.Image = pictureBytes;
+                        }
+                    }
+
+                    isUserExist.Name = request.Name;
+                    isUserExist.Surname = request.Surname;
+                    isUserExist.Phone = request.Phone;
+                    isUserExist.BirthDate = request.BirthDate;
+                    isUserExist.HomeLand = request.HomeLand;
+
+                    context.Update(isUserExist);
+                    await context.SaveChangesAsync();
+
+                    return Response<NoDataViewModel>.Success(204);
+                }
+                catch(Exception ex)
+                {
+                    return Response < NoDataViewModel >.Fail("Bir hata meydana geldi.Hata: " + ex, 500, true);
+                }
+            }
+        }
+
+        public async Task<Response<List<AppUserViewModel>>> GetAuthorsOfCategory(string categoryId)
+        {
+            using (var context = new AppDbContext())
+            {
+                try
+                {
+                    var department = context.Categories.Where(_ => _.Id.ToString() == categoryId).FirstOrDefault();
+                    var crossList = context.UserCategories.Where(_ => _.CategoryId == Guid.Parse(categoryId)).ToList();
+                    var authors = _userManager.GetUsersInRoleAsync("writer");
+                    var departmentAuthors = authors.Result.Where(_ => crossList.Any(x => x.UserId == _.Id)).Select(_ => new AppUserViewModel()
+                    {
+                        Id = _.Id,
+                        Name = _.Name,
+                        Surname = _.Surname,
+                        UserName = _.UserName,
+                        Email = _.Email,
+                        Phone = _.Phone,
+                        Image = _.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(_.Image),
+                    }).ToList();
+                    return Response<List<AppUserViewModel>>.Success(departmentAuthors, 200);
+                }
+                catch (Exception ex)
+                {
+                    return Response<List<AppUserViewModel>>.Fail("Bir hata meydana geldi.Hata: " + ex, 500, true);
+                }
+            }
+        }
+        public async Task<Response<List<AppUserViewModel>>> GetDirectorsOfCategory(string categoryId)
+        {
+            using (var context = new AppDbContext())
+            {
+                try
+                {
+
+                    var category = context.Categories.Where(_ => _.Id.ToString() == categoryId).FirstOrDefault();
+                    var crossList = context.UserCategories.Where(_ => _.CategoryId == Guid.Parse(categoryId)).ToList();
+                    var directors = await _userManager.GetUsersInRoleAsync("director");
+                    var departmentDirectors = directors.Where(_ => crossList.Any(x => x.UserId == _.Id)).Select(_ => new AppUserViewModel()
+                    {
+                        Id = _.Id,
+                        Name = _.Name,
+                        Surname = _.Surname,
+                        UserName = _.UserName,
+                        Email = _.Email,
+                        Phone = _.Phone,
+                        Image = _.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(_.Image),
+                    }).ToList();
+                    return Response<List<AppUserViewModel>>.Success(departmentDirectors, 200);
+
+                }
+                catch(Exception ex)
+                {
+                    return Response<List<AppUserViewModel>>.Fail("Bir hata meydana geldi.Hata: "+ex,500,true);
+                }
+            }
+        }
         public async Task<Response<AppUserViewModel>> AssignCategoryToUserAsync(AssingCategoryOrRoleToUserViewModel request)
         {
             try
@@ -163,6 +261,89 @@ namespace NewsApp.DAL.Concrete
                 {
                     Console.WriteLine(ex.Message);
                     return new List<AppUserViewModel>();
+                }
+            }
+        }
+
+        public async Task<Response<ManageUserViewModel>> ManagUsers()
+        {
+            using (var context = new AppDbContext())
+            {
+                try
+                {
+                    var writers = await _userManager.GetUsersInRoleAsync("writer");
+                    var managers = await _userManager.GetUsersInRoleAsync("manager");
+                    var usersWithRoles = await context.Users
+                        .Select(user => new
+                        {
+                            User = user,
+                            Roles = _userManager.GetRolesAsync(user).Result
+                        })
+                        .Select(data => new AppUserViewModel
+                        {
+                            Id = data.User.Id,
+                            Name = data.User.Name,
+                            Surname = data.User.Surname,
+                            UserName = data.User.UserName,
+                            Phone = data.User.Phone,
+                            Email = data.User.Email,
+                            IsSubcriber = data.User.IsSubscriber,
+                            Roles = data.Roles.ToList(),
+                            IsDeleted = data.User.IsDeleted
+                        })
+                        .ToListAsync();
+
+
+                    var manageUserViewModel = new ManageUserViewModel()
+                    {
+                        WriterCount = writers.Count,
+                        ManagerCount = managers.Count,
+                        TotalUser = usersWithRoles.Count,
+                        UserList = usersWithRoles
+                    };
+                    return Response<ManageUserViewModel>.Success(manageUserViewModel, 200);
+                }
+                catch(Exception ex)
+                {
+                    return Response<ManageUserViewModel>.Fail("Bir hata meydana geldi.Hata: " + ex, 500, true);
+                }
+            }
+        }
+        public async Task<Response<AppUserViewModel>> GetSingleUserById(string userId)
+        {
+            using(var context = new AppDbContext())
+            {
+                try
+                {
+                    var isUserExist = await context.Users.Where(_ => _.Id == userId).Select(_ => new AppUserViewModel()
+                    {
+                        Id = _.Id,
+                        Name = _.Name,
+                        Surname = _.Surname,
+                        Phone = _.Phone,
+                        Image = _.Image == null ? null : "data:image/jpg;base64," + Convert.ToBase64String(_.Image),
+                        HomeLand = _.HomeLand,
+                        Email = _.Email,
+                        BirthDate = _.BirthDate,
+                        IsSubcriber = _.IsSubscriber,
+                        UserName = _.UserName,
+                        UserCategory = context.UserCategories.Where(x => x.UserId == _.Id).Select(x => new CategoryViewModel()
+                        {
+                            Id = x.Category.Id.ToString(),
+                            Name = x.Category.Name
+                        }).FirstOrDefault(),
+                    }).FirstOrDefaultAsync();
+
+                    if (isUserExist == null)
+                    {
+                        return Response<AppUserViewModel>.Fail("there is no user matched given id.", 404, true);
+                    }
+
+                    return Response<AppUserViewModel>.Success(isUserExist, 200);
+                }
+                catch(Exception ex)
+                {
+                    return Response<AppUserViewModel>.Fail("Bir hata meydana geldi.Hata: " + ex, 500, true);
                 }
             }
         }

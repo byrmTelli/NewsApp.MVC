@@ -8,7 +8,7 @@
 <hr />
 <div class="row">
     <div class="col">
-        <div class="row bg-dark text-center text-white rounded-top">
+        <div class="row bg-light-blue-1 text-center text-white rounded-top">
             <h4 class="p-2">@Model.Department.Name</h4>
         </div>
         <div class="row manage-departments-card-body rounded-bottom p-2">
@@ -72,7 +72,6 @@
                            <th>Status</th>
                            <th>Category</th>
                            <th></th>
-                           <th></th>
                        </tr>
                     </thead>
                     <tbody>
@@ -84,15 +83,27 @@
                                 <td>12.5.2024</td>
                                 <td class="text-success">Waiting for approve</td>
                                 <td>@post.Category.Name</td>
-                                <td>
+                                <td class="d-flex gap-2">
                                     <form asp-area="Admin" asp-controller="Admin" asp-action="ApprovePost" method="post">
                                         <input type="hidden" name="departmentId" value="@Model.Department.Id"/>
                                         <input type="hidden" name="postId" value="@post.Id" />
-                                        <button type="submit" class="btn btn-outline-success">Approve</button>
+                                        <button 
+                                            data-toggle="tooltip"
+                                            title="Onayla"
+                                            type="submit" 
+                                            class="btn btn-success text-white">
+                                            <i class="fa-solid fa-thumbs-up"></i>
+                                        </button>
                                     </form>
-                                </td>
-                                <td>
-                                    <a asp-controller="Post" asp-action="Inspect" asp-route-postId="@post.Id">İncele</a>
+                                    <a 
+                                        data-toggle="tooltip"
+                                        title="İncele"
+                                        class="text-white btn bg-light-blue-1" 
+                                        asp-controller="Post" 
+                                        asp-action="Inspect" 
+                                        asp-route-postId="@post.Id">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }

@@ -1,6 +1,7 @@
 ﻿using NewsApp.CORE.DataAccess;
 using NewsApp.CORE.DBModels;
 using NewsApp.CORE.Generics;
+using NewsApp.CORE.RequestModels.CategoyRequestModels;
 using NewsApp.CORE.ViewModels.CategoryViewModels;
 using NewsApp.CORE.ViewModels.CustomViewModels;
 using System;
@@ -17,5 +18,8 @@ namespace NewsApp.DAL.Abstract
         Task<Response<NoDataViewModel>> ActiveCategory(string categoryId);
         Task<Response<List<CategoryViewModel>>> GetAllCategories();
         Task<Response<NoDataViewModel>> ResetUsersCategory(string userId);
+        Task<Response<NoDataViewModel>> CreateCategory(CategoryRequestModel request);
+        Task<CategoryViewModel> GetCategoryById(string id);
+        Task<CategoryViewModel> GetUsersCategory(string userId);
     }
 }

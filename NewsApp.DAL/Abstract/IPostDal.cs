@@ -16,6 +16,7 @@ namespace NewsApp.DAL.Abstract
     public interface IPostDal:IEntityRepository<Post>
     {
         Task<List<PostViewModel>> GetAllActivePosts();
+        Task<List<PostViewModel>> GetAllPosts();
         Task<List<PostViewModel>> GetPostsByCategory(string categoryName);
         Task<List<PostViewModel>> GetUnPublishedPostsByCategory(string categoryName);
         Task<Response<ManageSingleUserViewModel>> GetAllPostsOfUser(string userId);
